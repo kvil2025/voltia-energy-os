@@ -1,0 +1,126 @@
+{
+  "market": "Chile SEN (Sistema Eléctrico Nacional)",
+  "curtailment_ytd": {
+    "total_curtailed_twh": 3.42,
+    "curtailment_rate_pct": 18.4,
+    "estimated_economic_loss_usd_m": 142.5,
+    "primary_technology": "Solar Fotovoltaico (91%) + Eólico (9%)",
+    "historical_trend": [
+      {
+        "year": 2021,
+        "curtailment_gwh": 760,
+        "curtailment_pct": 5.2
+      },
+      {
+        "year": 2022,
+        "curtailment_gwh": 1470,
+        "curtailment_pct": 9.1
+      },
+      {
+        "year": 2023,
+        "curtailment_gwh": 2250,
+        "curtailment_pct": 13.8
+      },
+      {
+        "year": 2024,
+        "curtailment_gwh": 2890,
+        "curtailment_pct": 16.5
+      },
+      {
+        "year": 2025,
+        "curtailment_gwh": 3420,
+        "curtailment_pct": 18.4
+      }
+    ]
+  },
+  "bess_pipeline_sen": {
+    "operating_mw": 1420.0,
+    "operating_mwh": 5680.0,
+    "under_construction_mw": 3250.0,
+    "under_construction_mwh": 14200.0,
+    "environmental_approval_mw": 8940.0,
+    "projected_2030_mw": 6200.0,
+    "average_duration_hours": 4.1
+  },
+  "price_spreads_by_zone_usd": {
+    "Norte Grande": 87.1,
+    "Norte Chico": 91.2,
+    "Centro": 73.0,
+    "Sur": 67.0
+  },
+  "top_bess_arbitrage_nodes": [
+    {
+      "id": "diego_almagro_220",
+      "name": "Diego de Almagro 220 kV",
+      "zone": "Norte Chico",
+      "typical_spread_usd": 98.2,
+      "zero_price_hours": 2120,
+      "curtailment_pct": 24.8
+    },
+    {
+      "id": "cardones_500",
+      "name": "Cardones 500 kV",
+      "zone": "Norte Chico",
+      "typical_spread_usd": 94.5,
+      "zero_price_hours": 1940,
+      "curtailment_pct": 21.4
+    },
+    {
+      "id": "encuentro_220",
+      "name": "Encuentro 220 kV",
+      "zone": "Norte Grande",
+      "typical_spread_usd": 87.8,
+      "zero_price_hours": 1640,
+      "curtailment_pct": 18.0
+    },
+    {
+      "id": "crucero_220",
+      "name": "Crucero 220 kV",
+      "zone": "Norte Grande",
+      "typical_spread_usd": 86.4,
+      "zero_price_hours": 1580,
+      "curtailment_pct": 17.2
+    },
+    {
+      "id": "pan_azucar_220",
+      "name": "Pan de Azúcar 220 kV",
+      "zone": "Norte Chico",
+      "typical_spread_usd": 78.5,
+      "zero_price_hours": 1150,
+      "curtailment_pct": 14.6
+    }
+  ],
+  "transmission_bottlenecks": [
+    {
+      "corridor": "Cardones - Polpaico 500 kV",
+      "length_km": 753,
+      "current_flow_mw": 1680,
+      "rating_mw": 1700,
+      "saturation_pct": 98.8,
+      "status": "Congestión Severa / Vertimiento permanente en horas de sol"
+    },
+    {
+      "corridor": "Crucero - Encuentro 220 kV",
+      "length_km": 110,
+      "current_flow_mw": 980,
+      "rating_mw": 1100,
+      "saturation_pct": 89.1,
+      "status": "Congestión Alta en horas punta minera"
+    },
+    {
+      "corridor": "Charrúa - Ancoa 500 kV",
+      "length_km": 198,
+      "current_flow_mw": 1850,
+      "rating_mw": 2400,
+      "saturation_pct": 77.0,
+      "status": "Operación Normal / Moderada"
+    }
+  ],
+  "kimal_lo_aguirre_status": {
+    "name": "Línea HVDC Kimal - Lo Aguirre (+/- 600 kV)",
+    "capacity_mw": 3000,
+    "length_km": 1344,
+    "expected_cod": "Diciembre 2028 - Q2 2029",
+    "impact_on_spreads": "Reducción estimada del 35% al 45% en spreads Norte-Centro tras su entrada en operación"
+  }
+}

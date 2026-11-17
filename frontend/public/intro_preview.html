@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLTIA Energy OS — Kinetic Intro Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #050811;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e2e8f0;
+    }
+
+    /* ==============================================================
+       COCKPIT DASHBOARD (Revealed behind the intro)
+       ============================================================== */
+    #dashboard-cockpit {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 20%, #0d1527 0%, #060913 70%, #03050a 100%);
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+      opacity: 0;
+      transform: scale(0.97);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    #dashboard-cockpit.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    /* Top Cockpit Navbar */
+    .cockpit-nav {
+      height: 64px;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+      background: rgba(10, 15, 29, 0.75);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 18px rgba(0, 242, 254, 0.4);
+    }
+
+    .brand-logo-badge svg {
+      width: 22px;
+      height: 22px;
+      fill: #060913;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(0, 242, 254, 0.12);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: #00f2fe;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-stats {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      color: #38bdf8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-replay {
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      color: #00f2fe;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-replay:hover {
+      background: rgba(0, 242, 254, 0.2);
+      border-color: #00f2fe;
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Main Cockpit Grid Body */
+    .cockpit-body {
+      flex: 1;
+      padding: 20px 28px;
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 20px;
+      overflow: hidden;
+    }
+
+    .cockpit-card {
+      background: rgba(13, 21, 39, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 18px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cockpit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.5), transparent);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title span {
+      color: #00f2fe;
+    }
+
+    /* Mini Mock Elements inside Cards */
+    .node-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .node-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+    }
+
+    .node-name {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .node-cost {
+      color: #10b981;
+    }
+
+    .mock-chart-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chart-bars-mock {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 180px;
+      padding-top: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mock-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.5s ease;
+      position: relative;
+    }
+
+    .bar-solar { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); }
+    .bar-wind { background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%); }
+    .bar-bess { background: linear-gradient(180deg, #10b981 0%, #047857 100%); }
+    .bar-hydro { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); }
+
+    /* ==============================================================
+       KINETIC INTRO OVERLAY & CANVAS
+       ============================================================== */
+    #kinetic-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      background-color: #050811;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+      overflow: hidden;
+    }
+
+    #kinetic-container.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #kinetic-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* HUD Controls Overlay */
+    .intro-hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .hud-meta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: rgba(148, 163, 184, 0.8);
+      background: rgba(6, 11, 23, 0.5);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      padding: 10px 14px;
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hud-meta-block strong {
+      color: #00f2fe;
+    }
+
+    .hud-top-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .hud-btn {
+      background: rgba(6, 11, 23, 0.65);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+    }
+
+    .hud-btn:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: #00f2fe;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(0, 242, 254, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .hud-btn.active {
+      border-color: #00f2fe;
+      color: #00f2fe;
+    }
+
+    .hud-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .hud-stage-tracker {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(6, 11, 23, 0.5);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      padding: 10px 16px;
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+      font-size: 0.72rem;
+    }
+
+    .hud-stage-title {
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-stage-title span {
+      color: #00f2fe;
+      font-weight: 700;
+    }
+
+    .hud-progress-bar {
+      width: 240px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hud-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00f2fe, #38bdf8);
+      box-shadow: 0 0 8px #00f2fe;
+      transition: width 0.05s linear;
+    }
+
+    .hud-telemetry-feed {
+      text-align: right;
+      font-size: 0.7rem;
+      color: rgba(148, 163, 184, 0.7);
+      background: rgba(6, 11, 23, 0.5);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      padding: 10px 16px;
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+      max-width: 380px;
+    }
+
+    .hud-telemetry-feed .line-active {
+      color: #00f2fe;
+      font-weight: 600;
+    }
+
+    /* Keyboard shortcut tooltip */
+    .key-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.65rem;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================================================
+       COCKPIT PLATFORM (Revealed after explosion / skip)
+       ============================================================== -->
+  <div id="dashboard-cockpit">
+    <header class="cockpit-nav">
+      <div class="brand-group">
+        <div class="brand-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-title">
+          VOLTIA <span style="font-weight: 300; opacity: 0.85;">ENERGY OS</span>
+          <span class="brand-badge">AURORA REPLACEMENT v4.2</span>
+        </div>
+      </div>
+
+      <div class="nav-stats">
+        <div class="stat-pill">
+          <span class="stat-label">GRID TOPOLOGY</span>
+          <span class="stat-value"><span class="status-dot"></span> CHILE SEN (24 NODES)</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">DISPATCH ENGINE</span>
+          <span class="stat-value">8,760H LP/MILP COUPLER</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">SYSTEM FREQUENCY</span>
+          <span class="stat-value">50.00 Hz [NOMINAL]</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">AVERAGE MARGINAL COST</span>
+          <span class="stat-value" style="color: #10b981;">34.20 USD/MWh</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button id="btn-replay-nav" class="btn-replay">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <polyline points="23 20 23 14 17 14"></polyline>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+          </svg>
+          REPLAY INTRO
+        </button>
+      </div>
+    </header>
+
+    <main class="cockpit-body">
+      <!-- Left Panel: Grid Nodes & Congestion -->
+      <section class="cockpit-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>●</span> SEN NODAL BUS MATRIX
+          </div>
+          <span class="brand-badge">LIVE COUPLING</span>
+        </div>
+        <div class="node-list">
+          <div class="node-row">
+            <div>
+              <div class="node-name">CRUCERO 220kV</div>
+              <small style="color: #64748b;">Norte Grande // Mining Load</small>
+            </div>
+            <div class="node-cost">$28.40/MWh</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">QUILLOTA 220kV</div>
+              <small style="color: #64748b;">Central Hub // High Demand</small>
+            </div>
+            <div class="node-cost">$42.10/MWh</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">POLPAICO 500kV</div>
+              <small style="color: #64748b;">Interconnection Backbone</small>
+            </div>
+            <div class="node-cost">$36.50/MWh</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">CHARRÚA 500kV</div>
+              <small style="color: #64748b;">Sur Generation Confluence</small>
+            </div>
+            <div class="node-cost">$18.90/MWh</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">PUERTO MONTT 220kV</div>
+              <small style="color: #64748b;">Patagonia Transmission</small>
+            </div>
+            <div class="node-cost">$31.20/MWh</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">CARDONES 500kV</div>
+              <small style="color: #64748b;">Solar Evacuation Corridor</small>
+            </div>
+            <div class="node-cost">$0.00/MWh (SOLAR FLUX)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Panel: 8,760h Dispatch & Capacity Firming -->
+      <section class="cockpit-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>◆</span> 8,760-HOUR HOURLY OPTIMAL DISPATCH STACK
+          </div>
+          <div style="display: flex; gap: 12px; font-size: 0.72rem; font-family: 'JetBrains Mono';">
+            <span style="color: #f59e0b;">■ SOLAR PV</span>
+            <span style="color: #06b6d4;">■ WIND</span>
+            <span style="color: #10b981;">■ BESS DISCHARGE</span>
+            <span style="color: #3b82f6;">■ HYDRO RoR</span>
+          </div>
+        </div>
+        <div class="mock-chart-container">
+          <div class="chart-bars-mock" id="chart-bars">
+            <!-- Simulated 24-hour dispatch curve -->
+          </div>
+          <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: #64748b; margin-top: 8px;">
+            <span>00:00 (NIGHT ARBITRAGE)</span>
+            <span>06:00 (RAMP)</span>
+            <span>12:00 (SOLAR MAXIMUM & BESS CHARGE)</span>
+            <span>18:00 (SUNSET PEAK)</span>
+            <span>23:59 (CYCLING)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: BESS Arbitrage & Financial Metrics -->
+      <section class="cockpit-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>▲</span> BESS ARBITRAGE & REVENUE
+          </div>
+          <span class="brand-badge">NPV +18.4%</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 12px;">
+            <div style="font-size: 0.65rem; color: #10b981; font-family: 'JetBrains Mono';">OPTIMAL STORAGE CAPACITY</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: #ffffff; font-family: 'JetBrains Mono';">240 MW / 960 MWh</div>
+            <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">4-Hour LFP Battery Duration // 92.4% Round-Trip Efficiency</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'JetBrains Mono';">
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
+              <div style="color: #64748b; font-size: 0.65rem;">IRR (LEVERED)</div>
+              <div style="font-size: 1.1rem; color: #38bdf8; font-weight: 700;">14.82%</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
+              <div style="color: #64748b; font-size: 0.65rem;">CURTAILMENT AVOIDED</div>
+              <div style="font-size: 1.1rem; color: #f59e0b; font-weight: 700;">384 GWh/yr</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 6px; font-family: 'JetBrains Mono'; font-size: 0.72rem; line-height: 1.6; color: #94a3b8;">
+            <div style="color: #00f2fe; margin-bottom: 4px;">AURORA BENCHMARK ACCURACY:</div>
+            <div>• LP Dual Nodal Solution Error: &lt; 0.018%</div>
+            <div>• Solver Execution Time: 4.82s vs 42m (Legacy)</div>
+            <div>• Full Regulatory Compliance: CNE Res. Exenta 2026</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==============================================================
+       KINETIC INTRO CONTAINER (Canvas + HUD)
+       ============================================================== -->
+  <div id="kinetic-container">
+    <canvas id="kinetic-canvas"></canvas>
+
+    <div class="intro-hud">
+      <!-- Top HUD -->
+      <div class="hud-top">
+        <div class="hud-meta-block">
+          <div><strong>CORE_ENGINE:</strong> VOLTIA QUANTUM MILP v4.2</div>
+          <div><strong>INTERCONNECTION:</strong> CEN_CHILE_SEN // 500kV CORRIDOR</div>
+          <div><strong>LATENCY:</strong> 1.4ms REALTIME DISPATCH SYNC</div>
+        </div>
+
+        <div class="hud-top-right">
+          <button id="btn-audio" class="hud-btn" title="Toggle Sound Design">
+            <svg id="icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <span id="text-audio-status">SOUND: ON</span>
+          </button>
+
+          <button id="btn-skip" class="hud-btn" title="Skip Kinetic Sequence">
+            SKIP INTRO <span class="key-badge">SPACE</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom HUD -->
+      <div class="hud-bottom">
+        <div class="hud-stage-tracker">
+          <div class="hud-stage-title">
+            SEQUENCE STATUS: <span id="hud-stage-name">STAGE 1 // MACHINE ASSEMBLY</span>
+          </div>
+          <div class="hud-progress-bar">
+            <div id="hud-progress-fill" class="hud-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="hud-telemetry-feed" id="hud-telemetry">
+          <div>INITIATING QUANTUM DISPATCH ENGINE...</div>
+          <div class="line-active">CORE_ALIGNMENT // 8760H DISPATCH ENGINE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==============================================================
+       1. POPULATE MOCK DISPATCH CHART
+       ============================================================== */
+    const chartBarsContainer = document.getElementById('chart-bars');
+    const mockHourlyHeights = [
+      { s: 0, w: 40, b: 0, h: 30 },
+      { s: 0, w: 45, b: 0, h: 28 },
+      { s: 0, w: 50, b: 0, h: 25 },
+      { s: 0, w: 42, b: 0, h: 26 },
+      { s: 0, w: 35, b: 0, h: 30 },
+      { s: 5, w: 30, b: 0, h: 35 },
+      { s: 20, w: 25, b: -10, h: 35 },
+      { s: 45, w: 20, b: -20, h: 30 },
+      { s: 75, w: 18, b: -25, h: 25 },
+      { s: 95, w: 15, b: -30, h: 20 },
+      { s: 110, w: 12, b: -35, h: 20 },
+      { s: 120, w: 10, b: -40, h: 20 },
+      { s: 125, w: 12, b: -40, h: 20 },
+      { s: 120, w: 15, b: -35, h: 20 },
+      { s: 105, w: 18, b: -30, h: 20 },
+      { s: 80, w: 22, b: -20, h: 25 },
+      { s: 50, w: 28, b: 0, h: 30 },
+      { s: 20, w: 35, b: 25, h: 35 },
+      { s: 0, w: 45, b: 50, h: 40 },
+      { s: 0, w: 55, b: 60, h: 45 },
+      { s: 0, w: 60, b: 50, h: 40 },
+      { s: 0, w: 52, b: 35, h: 38 },
+      { s: 0, w: 48, b: 20, h: 35 },
+      { s: 0, w: 42, b: 10, h: 32 }
+    ];
+
+    mockHourlyHeights.forEach(h => {
+      const col = document.createElement('div');
+      col.style.display = 'flex';
+      col.style.flexDirection = 'column-reverse';
+      col.style.flex = '1';
+      col.style.height = '100%';
+      col.style.alignItems = 'stretch';
+      col.style.gap = '2px';
+
+      if (h.h > 0) {
+        const barH = document.createElement('div');
+        barH.className = 'mock-bar bar-hydro';
+        barH.style.height = `${h.h * 0.9}px`;
+        col.appendChild(barH);
+      }
+      if (h.w > 0) {
+        const barW = document.createElement('div');
+        barW.className = 'mock-bar bar-wind';
+        barW.style.height = `${h.w * 0.9}px`;
+        col.appendChild(barW);
+      }
+      if (h.s > 0) {
+        const barS = document.createElement('div');
+        barS.className = 'mock-bar bar-solar';
+        barS.style.height = `${h.s * 0.9}px`;
+        col.appendChild(barS);
+      }
+      if (h.b > 0) {
+        const barB = document.createElement('div');
+        barB.className = 'mock-bar bar-bess';
+        barB.style.height = `${h.b * 0.9}px`;
+        col.appendChild(barB);
+      }
+      chartBarsContainer.appendChild(col);
+    });
+
+    /* ==============================================================
+       2. PROCEDURAL WEB AUDIO SYNTHESIZER
+       ============================================================== */
+    class ProceduralAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.isMuted = false;
+        this.masterGain = null;
+        this.droneOsc1 = null;
+        this.droneOsc2 = null;
+        this.droneGain = null;
+        this.chargeOsc = null;
+        this.chargeGain = null;
+        this.initialized = false;
+      }
+
+      init() {
+        if (this.initialized) return;
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          this.ctx = new AudioContext();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.4, this.ctx.currentTime);
+          this.masterGain.connect(this.ctx.destination);
+          this.initialized = true;
+        } catch (e) {
+          console.warn("AudioContext init postponed until gesture", e);
+        }
+      }
+
+      resume() {
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.4, this.ctx.currentTime);
+        }
+        return this.isMuted;
+      }
+
+      playMechanicalTick(pitch = 1400) {
+        if (!this.initialized || this.isMuted) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(pitch, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.035);
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(2600, now);
+        filter.Q.value = 5;
+
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+
+        osc.start(now);
+        osc.stop(now + 0.04);
+      }
+
+      playArcPulse() {
+        if (!this.initialized || this.isMuted) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(350 + Math.random() * 600, now);
+        osc.frequency.linearRampToValueAtTime(90, now + 0.06);
+
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        osc.start(now);
+        osc.stop(now + 0.06);
+      }
+
+      startReactorDrone() {
+        if (!this.initialized) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+        this.stopReactorDrone();
+
+        this.droneGain = this.ctx.createGain();
+        this.droneGain.gain.setValueAtTime(0.0001, now);
+        this.droneGain.gain.linearRampToValueAtTime(0.18, now + 1.2);
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(140, now);
+        filter.frequency.linearRampToValueAtTime(420, now + 3.2);
+
+        this.droneOsc1 = this.ctx.createOscillator();
+        this.droneOsc1.type = 'sawtooth';
+        this.droneOsc1.frequency.setValueAtTime(55, now); // A1 note
+
+        this.droneOsc2 = this.ctx.createOscillator();
+        this.droneOsc2.type = 'sine';
+        this.droneOsc2.frequency.setValueAtTime(110.5, now);
+
+        this.droneOsc1.connect(filter);
+        this.droneOsc2.connect(filter);
+        filter.connect(this.droneGain);
+        this.droneGain.connect(this.masterGain);
+
+        this.droneOsc1.start(now);
+        this.droneOsc2.start(now);
+      }
+
+      stopReactorDrone() {
+        if (this.droneOsc1) {
+          try { this.droneOsc1.stop(); this.droneOsc1.disconnect(); } catch (e) {}
+          this.droneOsc1 = null;
+        }
+        if (this.droneOsc2) {
+          try { this.droneOsc2.stop(); this.droneOsc2.disconnect(); } catch (e) {}
+          this.droneOsc2 = null;
+        }
+      }
+
+      startChargeWhine(duration = 1.3) {
+        if (!this.initialized || this.isMuted) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+
+        this.chargeOsc = this.ctx.createOscillator();
+        this.chargeGain = this.ctx.createGain();
+
+        this.chargeOsc.type = 'sine';
+        this.chargeOsc.frequency.setValueAtTime(180, now);
+        this.chargeOsc.frequency.exponentialRampToValueAtTime(3200, now + duration);
+
+        this.chargeGain.gain.setValueAtTime(0.02, now);
+        this.chargeGain.gain.linearRampToValueAtTime(0.32, now + duration * 0.85);
+        this.chargeGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        this.chargeOsc.connect(this.chargeGain);
+        this.chargeGain.connect(this.masterGain);
+
+        this.chargeOsc.start(now);
+        this.chargeOsc.stop(now + duration);
+      }
+
+      playShockwaveExplosion() {
+        if (!this.initialized || this.isMuted) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+        this.stopReactorDrone();
+
+        // 1. Sub-bass boom
+        const subOsc = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(130, now);
+        subOsc.frequency.exponentialRampToValueAtTime(22, now + 1.8);
+
+        subGain.gain.setValueAtTime(0.9, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+
+        subOsc.connect(subGain);
+        subGain.connect(this.masterGain);
+        subOsc.start(now);
+        subOsc.stop(now + 2.0);
+
+        // 2. Resonant noise burst
+        const bufferSize = this.ctx.sampleRate * 2;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.4));
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const noiseFilter = this.ctx.createBiquadFilter();
+        noiseFilter.type = 'lowpass';
+        noiseFilter.frequency.setValueAtTime(1400, now);
+        noiseFilter.frequency.exponentialRampToValueAtTime(50, now + 1.3);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.7, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(this.masterGain);
+        noise.start(now);
+
+        // 3. Shimmer tone
+        const chime = this.ctx.createOscillator();
+        const chimeGain = this.ctx.createGain();
+        chime.type = 'triangle';
+        chime.frequency.setValueAtTime(1760, now + 0.08);
+        chime.frequency.exponentialRampToValueAtTime(880, now + 1.6);
+
+        chimeGain.gain.setValueAtTime(0.001, now);
+        chimeGain.gain.setValueAtTime(0.18, now + 0.08);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+
+        chime.connect(chimeGain);
+        chimeGain.connect(this.masterGain);
+        chime.start(now + 0.08);
+        chime.stop(now + 2.0);
+      }
+    }
+
+    /* ==============================================================
+       3. KINETIC INTRO 60FPS CANVAS ENGINE
+       ============================================================== */
+    const canvas = document.getElementById('kinetic-canvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('kinetic-container');
+    const dashboard = document.getElementById('dashboard-cockpit');
+
+    const hudStageName = document.getElementById('hud-stage-name');
+    const hudProgressFill = document.getElementById('hud-progress-fill');
+    const hudTelemetry = document.getElementById('hud-telemetry');
+    const btnSkip = document.getElementById('btn-skip');
+    const btnAudio = document.getElementById('btn-audio');
+    const textAudioStatus = document.getElementById('text-audio-status');
+    const btnReplayNav = document.getElementById('btn-replay-nav');
+
+    const audio = new ProceduralAudioEngine();
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let cx = 0;
+    let cy = 0;
+
+    let animId = null;
+    let startTime = null;
+    let isRunning = false;
+
+    // Timing Constants
+    const T_STAGE1_END = 3.2;  // Machine Assembly
+    const T_STAGE2_END = 4.5;  // Resonance Surge
+    const T_STAGE3_END = 5.5;  // Shockwave Explosion
+    const T_TOTAL_END  = 6.5;  // Dissolve & Settle into UI
+
+    // Particles Data Structure
+    const PARTICLE_COUNT = 1600;
+    const particles = [];
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = (Math.random() - 0.5) * width;
+        this.y = (Math.random() - 0.5) * height;
+        this.z = Math.random() * 800 - 400; // 3D depth
+
+        this.vx = 0;
+        this.vy = 0;
+        this.vz = 0;
+
+        this.size = Math.random() * 2.5 + 0.8;
+        this.baseAlpha = Math.random() * 0.7 + 0.3;
+        this.alpha = this.baseAlpha;
+
+        this.type = Math.random() > 0.4 ? 'shard' : (Math.random() > 0.5 ? 'spark' : 'ring');
+        this.color = Math.random() > 0.3 ? '#00f2fe' : (Math.random() > 0.5 ? '#38bdf8' : '#ffffff');
+        this.rot = Math.random() * Math.PI * 2;
+        this.vRot = (Math.random() - 0.5) * 0.15;
+
+        // Settled target coordinates for Stage 4 constellation
+        this.targetX = 0;
+        this.targetY = 0;
+        this.isSettled = false;
+      }
+
+      explode(cx, cy, intensity = 1.0) {
+        const angle = Math.random() * Math.PI * 2;
+        const elevation = (Math.random() - 0.5) * Math.PI;
+        const speed = (Math.random() * 1400 + 400) * intensity;
+
+        this.x = cx + Math.cos(angle) * (Math.random() * 25);
+        this.y = cy + Math.sin(angle) * (Math.random() * 25);
+        this.z = (Math.random() - 0.5) * 80;
+
+        this.vx = Math.cos(angle) * Math.cos(elevation) * speed;
+        this.vy = Math.sin(angle) * Math.cos(elevation) * speed;
+        this.vz = Math.sin(elevation) * speed;
+      }
+    }
+
+    // Geometry Helpers: 3D rotating Polyhedron (Quantum Core Singularity)
+    const vertices = [
+      [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+      [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1],
+      [0, -1.6, 0], [0, 1.6, 0], [-1.6, 0, 0], [1.6, 0, 0]
+    ];
+    const edges = [
+      [0, 1], [1, 2], [2, 3], [3, 0],
+      [4, 5], [5, 6], [6, 7], [7, 4],
+      [0, 4], [1, 5], [2, 6], [3, 7],
+      [8, 0], [8, 1], [8, 4], [8, 5],
+      [9, 2], [9, 3], [9, 6], [9, 7],
+      [10, 0], [10, 3], [10, 4], [10, 7],
+      [11, 1], [11, 2], [11, 5], [11, 6]
+    ];
+
+    // Electric Arc Pulses
+    let arcs = [];
+    function generateArcs(cx, cy, count = 3, maxR = 150) {
+      arcs = [];
+      for (let i = 0; i < count; i++) {
+        const startAngle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+        const startX = cx + Math.cos(startAngle) * maxR;
+        const startY = cy + Math.sin(startAngle) * maxR;
+
+        const points = [{ x: startX, y: startY }];
+        const steps = 7;
+        for (let s = 1; s <= steps; s++) {
+          const ratio = s / steps;
+          const targetX = cx + (startX - cx) * (1 - ratio);
+          const targetY = cy + (startY - cy) * (1 - ratio);
+          const jitter = (1 - ratio) * 26;
+          points.push({
+            x: targetX + (Math.random() - 0.5) * jitter,
+            y: targetY + (Math.random() - 0.5) * jitter
+          });
+        }
+        arcs.push(points);
+      }
+    }
+
+    // Audio Cue Triggers
+    let audioState = {
+      droneStarted: false,
+      chargeStarted: false,
+      explosionTriggered: false,
+      lastTickTime: 0
+    };
+
+    function resetAudioTriggers() {
+      audioState = {
+        droneStarted: false,
+        chargeStarted: false,
+        explosionTriggered: false,
+        lastTickTime: 0
+      };
+    }
+
+    // Resize Handler
+    function handleResize() {
+      dpr = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      cx = width / 2;
+      cy = height / 2;
+
+      // Assign constellation grid targets for Stage 4
+      const cols = 40;
+      const rows = 25;
+      const stepX = width / cols;
+      const stepY = height / rows;
+
+      particles.forEach((p, idx) => {
+        const c = idx % cols;
+        const r = Math.floor(idx / cols) % rows;
+        p.targetX = (c + 0.5) * stepX + (Math.random() - 0.5) * 8;
+        p.targetY = (r + 0.5) * stepY + (Math.random() - 0.5) * 8;
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Initialize Particles
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+    }
+    handleResize();
+
+    /* ==============================================================
+       4. ANIMATION FRAME RENDER LOOP
+       ============================================================== */
+    let lastTime = 0;
+
+    function render(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = (timestamp - startTime) / 1000;
+      const dt = lastTime ? Math.min(0.05, (timestamp - lastTime) / 1000) : 0.016;
+      lastTime = timestamp;
+
+      // Global Progress
+      const totalProgress = Math.min(1, elapsed / T_TOTAL_END);
+      hudProgressFill.style.width = `${(totalProgress * 100).toFixed(1)}%`;
+
+      // Screen Shake parameters
+      let shakeX = 0;
+      let shakeY = 0;
+
+      // -------------------------------------------------------------
+      // STAGE DISPATCH & AUDIO TRIGGERS
+      // -------------------------------------------------------------
+      if (elapsed < T_STAGE1_END) {
+        // --- STAGE 1: MECHANICAL ASSEMBLY ---
+        const p1 = elapsed / T_STAGE1_END;
+        hudStageName.innerText = `STAGE 1 // CORE_ASSEMBLY [${Math.floor(p1 * 100)}%]`;
+
+        if (!audioState.droneStarted) {
+          audio.startReactorDrone();
+          audioState.droneStarted = true;
+        }
+
+        // Caliper lock ticks
+        if (elapsed - audioState.lastTickTime > 0.45 && elapsed < 2.8) {
+          audio.playMechanicalTick(1000 + Math.random() * 800);
+          audioState.lastTickTime = elapsed;
+          generateArcs(cx, cy, 3, 140);
+        }
+
+        if (elapsed > 0.8 && elapsed < 1.6) {
+          hudTelemetry.innerHTML = `
+            <div>GRID_TOPOLOGY_MATRIX // CEN_CHILE_SEN</div>
+            <div class="line-active">CORE_ALIGNMENT // 8760H DISPATCH ENGINE [OK]</div>
+          `;
+        } else if (elapsed >= 1.6 && elapsed < 2.5) {
+          hudTelemetry.innerHTML = `
+            <div>COUPLING QUANTUM SOLVER // LP_MILP_v4.2</div>
+            <div class="line-active">POLPAICO-CHARRÚA 500kV SYNCHRONIZED</div>
+          `;
+        } else if (elapsed >= 2.5) {
+          hudTelemetry.innerHTML = `
+            <div>CALIBRATING BESS CAPABILITY FIRMERS...</div>
+            <div class="line-active">POWER ACCUMULATION // 99.8% READY</div>
+          `;
+        }
+
+      } else if (elapsed < T_STAGE2_END) {
+        // --- STAGE 2: RESONANCE SURGE & ENERGY SATURATION ---
+        const p2 = (elapsed - T_STAGE1_END) / (T_STAGE2_END - T_STAGE1_END);
+        hudStageName.innerText = `STAGE 2 // RESONANCE_SURGE [${Math.floor(p2 * 100)}%]`;
+
+        if (!audioState.chargeStarted) {
+          audio.startChargeWhine(T_STAGE2_END - T_STAGE1_END);
+          audioState.chargeStarted = true;
+        }
+
+        // Violent screen shake ramping up exponentially
+        const shakeMag = Math.pow(p2, 3) * 16;
+        shakeX = (Math.random() - 0.5) * shakeMag;
+        shakeY = (Math.random() - 0.5) * shakeMag;
+
+        if (Math.random() > 0.3) {
+          generateArcs(cx, cy, 4, 160 * (1 - p2 * 0.7));
+          if (Math.random() > 0.6) audio.playArcPulse();
+        }
+
+        hudTelemetry.innerHTML = `
+          <div style="color: #f59e0b;">WARNING: FLUX SATURATION THRESHOLD EXCEEDED</div>
+          <div class="line-active" style="color: #ef4444;">CRITICAL RESONANCE PEAK: ${(p2 * 100).toFixed(1)}%</div>
+        `;
+
+      } else if (elapsed < T_STAGE3_END) {
+        // --- STAGE 3: QUANTUM IGNITION & SHOCKWAVE EXPLOSION ---
+        const p3 = (elapsed - T_STAGE2_END) / (T_STAGE3_END - T_STAGE2_END);
+        hudStageName.innerText = `STAGE 3 // QUANTUM_IGNITION [${Math.floor(p3 * 100)}%]`;
+
+        if (!audioState.explosionTriggered) {
+          audio.playShockwaveExplosion();
+          audioState.explosionTriggered = true;
+
+          // Erupt all 1,600 particles outwards!
+          particles.forEach(p => p.explode(cx, cy, 1.2));
+        }
+
+        // Shockwave residual shake fading out
+        const residualShake = (1 - p3) * 10;
+        shakeX = (Math.random() - 0.5) * residualShake;
+        shakeY = (Math.random() - 0.5) * residualShake;
+
+        hudTelemetry.innerHTML = `
+          <div style="color: #00f2fe;">IGNITION SEQUENCE EXECUTED // MATRIX EXPANDED</div>
+          <div class="line-active">DISPATCH COUPLER ENGAGED: 8,760 HOURS SOLVED IN 1.4s</div>
+        `;
+
+      } else {
+        // --- STAGE 4: SMOOTH DISSOLVE & REVEAL ---
+        const p4 = (elapsed - T_STAGE3_END) / (T_TOTAL_END - T_STAGE3_END);
+        hudStageName.innerText = `STAGE 4 // MATRIX_STABILIZED`;
+
+        hudTelemetry.innerHTML = `
+          <div style="color: #10b981;">VOLTIA ENERGY OS ONLINE</div>
+          <div class="line-active" style="color: #ffffff;">WELCOME, OPERATOR. SYSTEM OPERATIONAL.</div>
+        `;
+
+        // Smooth container fade-out
+        if (p4 > 0.4) {
+          const fadeRatio = (p4 - 0.4) / 0.6;
+          container.style.opacity = `${Math.max(0, 1 - fadeRatio)}`;
+        }
+
+        // Trigger finish at end
+        if (elapsed >= T_TOTAL_END) {
+          finishIntro();
+          return;
+        }
+      }
+
+      // -------------------------------------------------------------
+      // DRAW CANVAS FRAME
+      // -------------------------------------------------------------
+      ctx.save();
+      ctx.translate(shakeX, shakeY);
+
+      // 1. Trail clear (motion blur for high-speed sparks)
+      ctx.fillStyle = elapsed < T_STAGE3_END ? 'rgba(5, 8, 17, 0.4)' : 'rgba(5, 8, 17, 0.25)';
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Blueprint Grid & Scanner (Stages 1 & 2)
+      if (elapsed < T_STAGE3_END) {
+        drawBlueprintGrid(elapsed);
+      }
+
+      // 3. Central Mechanical Reactor Assembly (Stages 1 & 2)
+      if (elapsed < T_STAGE2_END + 0.1) {
+        drawMechanicalAssembly(elapsed);
+      }
+
+      // 4. Electric Arcs
+      if (elapsed < T_STAGE2_END && arcs.length > 0) {
+        drawElectricArcs();
+      }
+
+      // 5. Explosion Shockwaves & Laser Flash (Stage 3)
+      if (elapsed >= T_STAGE2_END && elapsed < T_STAGE3_END) {
+        drawShockwave(elapsed - T_STAGE2_END);
+      }
+
+      // 6. Particle Physics Update & Render (All Stages, especially 3 & 4)
+      updateAndDrawParticles(elapsed, dt);
+
+      // 7. Final Brand Typography Hologram (Stage 4)
+      if (elapsed >= T_STAGE3_END) {
+        drawHologramLogo(elapsed - T_STAGE3_END);
+      }
+
+      ctx.restore();
+
+      // Loop
+      animId = requestAnimationFrame(render);
+    }
+
+    /* ==============================================================
+       5. GRAPHICS SUB-ROUTINES
+       ============================================================== */
+
+    // --- A. Blueprint Grid & Scanlines ---
+    function drawBlueprintGrid(elapsed) {
+      const gridSize = 48;
+      const alpha = Math.min(0.25, elapsed * 0.12);
+
+      ctx.strokeStyle = `rgba(0, 242, 254, ${alpha * 0.4})`;
+      ctx.lineWidth = 1;
+
+      // Grid lines
+      ctx.beginPath();
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+      }
+      ctx.stroke();
+
+      // Sweeping horizontal laser scan beam
+      const scanY = (elapsed * 240) % height;
+      const scanGrad = ctx.createLinearGradient(0, scanY - 20, 0, scanY + 20);
+      scanGrad.addColorStop(0, 'rgba(0, 242, 254, 0)');
+      scanGrad.addColorStop(0.5, `rgba(0, 242, 254, ${alpha * 0.8})`);
+      scanGrad.addColorStop(1, 'rgba(0, 242, 254, 0)');
+
+      ctx.fillStyle = scanGrad;
+      ctx.fillRect(0, scanY - 20, width, 40);
+
+      // 4-Corner HUD Reticles
+      const bracketSize = 36;
+      const margin = 28;
+      ctx.strokeStyle = `rgba(0, 242, 254, ${alpha * 1.4})`;
+      ctx.lineWidth = 2;
+
+      // Top-Left
+      ctx.beginPath();
+      ctx.moveTo(margin, margin + bracketSize);
+      ctx.lineTo(margin, margin);
+      ctx.lineTo(margin + bracketSize, margin);
+      // Top-Right
+      ctx.moveTo(width - margin - bracketSize, margin);
+      ctx.lineTo(width - margin, margin);
+      ctx.lineTo(width - margin, margin + bracketSize);
+      // Bottom-Left
+      ctx.moveTo(margin, height - margin - bracketSize);
+      ctx.lineTo(margin, height - margin);
+      ctx.lineTo(margin + bracketSize, height - margin);
+      // Bottom-Right
+      ctx.moveTo(width - margin - bracketSize, height - margin);
+      ctx.lineTo(width - margin, height - margin);
+      ctx.lineTo(width - margin, height - margin - bracketSize);
+      ctx.stroke();
+    }
+
+    // --- B. Mechanical Assembly of Reactor Core ---
+    function drawMechanicalAssembly(elapsed) {
+      const p1 = Math.min(1, elapsed / T_STAGE1_END);
+      const isSurge = elapsed >= T_STAGE1_END;
+      const surgeRatio = isSurge ? (elapsed - T_STAGE1_END) / (T_STAGE2_END - T_STAGE1_END) : 0;
+
+      // Speed multipliers (surge accelerates rotation 8x)
+      const speedMult = 1 + surgeRatio * 7;
+      const t = elapsed * speedMult;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // 1. Outer Segmented Ring & Ticks (Assembly radius ~220px)
+      const outerR = 210 * Math.min(1, p1 * 1.2);
+      ctx.strokeStyle = 'rgba(0, 242, 254, 0.25)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, outerR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Outer Gear Ticks (60 ticks)
+      const totalTicks = 60;
+      const visibleTicks = Math.floor(totalTicks * Math.min(1, p1 * 1.5));
+      ctx.save();
+      ctx.rotate(t * 0.15);
+      ctx.strokeStyle = '#00f2fe';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < visibleTicks; i++) {
+        const ang = (Math.PI * 2 / totalTicks) * i;
+        const tickLen = i % 5 === 0 ? 12 : 6;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(ang) * (outerR - tickLen), Math.sin(ang) * (outerR - tickLen));
+        ctx.lineTo(Math.cos(ang) * outerR, Math.sin(ang) * outerR);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Caliper Lock Arms (4 cardinal points)
+      if (p1 > 0.4) {
+        const caliperProgress = Math.min(1, (p1 - 0.4) / 0.6);
+        const caliperDist = 280 - caliperProgress * 70; // slide into place
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)';
+        ctx.lineWidth = 2;
+        for (let k = 0; k < 4; k++) {
+          ctx.save();
+          ctx.rotate(k * Math.PI / 2);
+          ctx.beginPath();
+          ctx.moveTo(caliperDist, -14);
+          ctx.lineTo(caliperDist - 18, 0);
+          ctx.lineTo(caliperDist, 14);
+          ctx.stroke();
+
+          // Caliper glow marker
+          ctx.fillStyle = '#00f2fe';
+          ctx.beginPath();
+          ctx.arc(caliperDist - 18, 0, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // 2. Middle Stator Coil Ring (Radius ~145px, 12 electromagnetic coils)
+      const midR = 145 * Math.min(1, p1 * 1.4);
+      ctx.save();
+      ctx.rotate(-t * 0.25);
+      const coils = 12;
+      for (let c = 0; c < coils; c++) {
+        const cAng = (Math.PI * 2 / coils) * c;
+        const isLit = (Math.floor(elapsed * 8) % coils) === c || isSurge;
+
+        ctx.fillStyle = isLit ? 'rgba(0, 242, 254, 0.9)' : 'rgba(0, 242, 254, 0.2)';
+        ctx.shadowColor = isLit ? '#00f2fe' : 'transparent';
+        ctx.shadowBlur = isLit ? 16 : 0;
+
+        const coilX = Math.cos(cAng) * midR;
+        const coilY = Math.sin(cAng) * midR;
+
+        ctx.beginPath();
+        ctx.arc(coilX, coilY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Stator arc teeth
+        ctx.strokeStyle = 'rgba(0, 242, 254, 0.35)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, midR, cAng - 0.14, cAng + 0.14);
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.shadowBlur = 0;
+
+      // 3. Inner Magnetic Containment Ring (Radius ~80px)
+      const innerR = 80 * Math.min(1, p1 * 1.8);
+      ctx.save();
+      ctx.rotate(t * 0.4);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+      ctx.setLineDash([12, 8]);
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, innerR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // 4. Central Singularity / 3D Polyhedron Wireframe
+      const polyScale = (24 + Math.sin(elapsed * 6) * 4 + surgeRatio * 35) * Math.min(1, p1 * 2);
+      const rotAngleX = elapsed * 1.8;
+      const rotAngleY = elapsed * 2.4;
+
+      // Project 3D vertices to 2D
+      const projected = vertices.map(v => {
+        // Rotate Y
+        let x1 = v[0] * Math.cos(rotAngleY) + v[2] * Math.sin(rotAngleY);
+        let z1 = -v[0] * Math.sin(rotAngleY) + v[2] * Math.cos(rotAngleY);
+        // Rotate X
+        let y2 = v[1] * Math.cos(rotAngleX) - z1 * Math.sin(rotAngleX);
+        let z2 = v[1] * Math.sin(rotAngleX) + z1 * Math.cos(rotAngleX);
+
+        const fov = 400;
+        const scale = fov / (fov + z2 * polyScale);
+        return {
+          x: x1 * polyScale * scale,
+          y: y2 * polyScale * scale
+        };
+      });
+
+      // Draw Polyhedron Wireframe
+      ctx.strokeStyle = isSurge ? '#ffffff' : '#00f2fe';
+      ctx.shadowColor = '#00f2fe';
+      ctx.shadowBlur = isSurge ? 25 : 10;
+      ctx.lineWidth = isSurge ? 2.5 : 1.5;
+
+      ctx.beginPath();
+      edges.forEach(([i, j]) => {
+        ctx.moveTo(projected[i].x, projected[i].y);
+        ctx.lineTo(projected[j].x, projected[j].y);
+      });
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Central core radial glow
+      const glowR = (30 + surgeRatio * 180) * Math.min(1, p1 * 2);
+      const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
+      coreGrad.addColorStop(0, '#ffffff');
+      coreGrad.addColorStop(0.3, isSurge ? '#4facfe' : '#00f2fe');
+      coreGrad.addColorStop(1, 'rgba(0, 242, 254, 0)');
+
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Tachometer Critical Threshold Needle (Surge phase)
+      if (isSurge) {
+        const needleAngle = Math.PI * 0.8 + surgeRatio * Math.PI * 1.4;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(needleAngle) * (innerR + 25), Math.sin(needleAngle) * (innerR + 25));
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(Math.cos(needleAngle) * (innerR + 25), Math.sin(needleAngle) * (innerR + 25), 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // --- C. Electric Lightning Arcs ---
+    function drawElectricArcs() {
+      ctx.save();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.shadowColor = '#00f2fe';
+      ctx.shadowBlur = 12;
+      ctx.lineWidth = 2;
+
+      arcs.forEach(points => {
+        if (points.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.stroke();
+      });
+
+      ctx.restore();
+    }
+
+    // --- D. Relativistic Shockwave & Flash ---
+    function drawShockwave(elapsedInStage3) {
+      const p = elapsedInStage3 / (T_STAGE3_END - T_STAGE2_END); // 0 -> 1
+
+      // 1. Initial Pure White / Cyan Coherent Flash
+      if (p < 0.35) {
+        const flashAlpha = Math.max(0, 1 - p / 0.35);
+        ctx.fillStyle = `rgba(255, 255, 255, ${flashAlpha * 0.95})`;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = `rgba(0, 242, 254, ${flashAlpha * 0.6})`;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      // 2. Primary Expanding Supersonic Shockwave Ring
+      const maxR = Math.sqrt(width * width + height * height) * 0.85;
+      const shockR = Math.pow(p, 0.65) * maxR;
+
+      ctx.save();
+      ctx.strokeStyle = `rgba(0, 242, 254, ${Math.max(0, 1 - p)})`;
+      ctx.shadowColor = '#00f2fe';
+      ctx.shadowBlur = 24 * (1 - p);
+      ctx.lineWidth = Math.max(1, (1 - p) * 14);
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, shockR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Secondary Harmonic Ring (slight delay)
+      if (p > 0.08) {
+        const p2 = (p - 0.08) / 0.92;
+        const shockR2 = Math.pow(p2, 0.7) * (maxR * 0.9);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${Math.max(0, (1 - p2) * 0.6)})`;
+        ctx.lineWidth = Math.max(1, (1 - p2) * 8);
+        ctx.beginPath();
+        ctx.arc(cx, cy, shockR2, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // --- E. Particle Physics Simulation & Rendering ---
+    function updateAndDrawParticles(elapsed, dt) {
+      const isStage2 = elapsed >= T_STAGE1_END && elapsed < T_STAGE2_END;
+      const isExplosion = elapsed >= T_STAGE2_END;
+      const isStage4 = elapsed >= T_STAGE3_END;
+
+      // Friction & physics constants
+      const friction = isExplosion ? 0.965 : 0.98;
+
+      particles.forEach((p, idx) => {
+        // Stage 1: Gentle orbital drift
+        if (elapsed < T_STAGE1_END) {
+          const dist = Math.hypot(p.x - cx, p.y - cy) || 1;
+          const ang = Math.atan2(p.y - cy, p.x - cx) + 0.008;
+          p.x = cx + Math.cos(ang) * dist;
+          p.y = cy + Math.sin(ang) * dist;
+        }
+
+        // Stage 2: Vortex attraction toward core
+        else if (isStage2) {
+          const dx = cx - p.x;
+          const dy = cy - p.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const pull = (1400 / (dist + 30)) * dt * 60;
+          const perpX = -dy / dist;
+          const perpY = dx / dist;
+
+          p.vx += (dx / dist) * pull + perpX * 3.5;
+          p.vy += (dy / dist) * pull + perpY * 3.5;
+
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vx *= 0.92;
+          p.vy *= 0.92;
+        }
+
+        // Stage 3 & 4: Outward explosive trajectory with damping
+        else if (isExplosion) {
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.z += p.vz * dt;
+
+          p.vx *= friction;
+          p.vy *= friction;
+          p.vz *= friction;
+
+          p.rot += p.vRot;
+
+          // Stage 4: Settle gracefully into constellation grid
+          if (isStage4) {
+            const p4Progress = Math.min(1, (elapsed - T_STAGE3_END) / 0.8);
+            p.x += (p.targetX - p.x) * (0.05 * p4Progress);
+            p.y += (p.targetY - p.y) * (0.05 * p4Progress);
+          }
+        }
+
+        // Render Particle
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+
+        // Perspective scale based on Z
+        const fov = 500;
+        const scale = Math.max(0.2, fov / (fov + p.z));
+        ctx.scale(scale, scale);
+
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+
+        if (p.type === 'shard') {
+          // Geometric diamond shard
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size * 2);
+          ctx.lineTo(p.size, 0);
+          ctx.lineTo(0, p.size * 2);
+          ctx.lineTo(-p.size, 0);
+          ctx.closePath();
+          ctx.fill();
+        } else if (p.type === 'spark') {
+          // Glowing circle spark
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Quantum ring
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 1.5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      });
+
+      // Stage 4: Draw faint constellation grid links between neighbor particles
+      if (isStage4) {
+        const linkAlpha = Math.min(0.25, (elapsed - T_STAGE3_END) * 0.4);
+        ctx.strokeStyle = `rgba(0, 242, 254, ${linkAlpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i < 300; i += 3) {
+          const pA = particles[i];
+          const pB = particles[(i + 1) % particles.length];
+          const d = Math.hypot(pA.x - pB.x, pA.y - pB.y);
+          if (d < 110) {
+            ctx.moveTo(pA.x, pA.y);
+            ctx.lineTo(pB.x, pB.y);
+          }
+        }
+        ctx.stroke();
+      }
+    }
+
+    // --- F. Final Hologram Logo Reveal (Stage 4) ---
+    function drawHologramLogo(elapsedInStage4) {
+      const alpha = Math.min(1, elapsedInStage4 / 0.5);
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Brand Title
+      ctx.font = '800 48px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.shadowColor = '#00f2fe';
+      ctx.shadowBlur = 24 * alpha;
+      ctx.letterSpacing = '12px';
+      ctx.fillText('V O L T I A', cx, cy - 18);
+
+      // Subtitle
+      ctx.font = '600 13px "JetBrains Mono", monospace';
+      ctx.fillStyle = `rgba(0, 242, 254, ${alpha * 0.9})`;
+      ctx.shadowBlur = 10 * alpha;
+      ctx.fillText('ENERGY OS // QUANTUM POWER DISPATCH', cx, cy + 32);
+
+      ctx.restore();
+    }
+
+    /* ==============================================================
+       6. INTRO CONTROLS & COMPLETION HANDLER
+       ============================================================== */
+    function finishIntro() {
+      if (!isRunning) return;
+      isRunning = false;
+      if (animId) cancelAnimationFrame(animId);
+
+      container.classList.add('hidden');
+      dashboard.classList.add('active');
+
+      audio.stopReactorDrone();
+    }
+
+    function startIntro() {
+      isRunning = true;
+      startTime = null;
+      lastTime = 0;
+      resetAudioTriggers();
+
+      // Reset particles
+      particles.forEach(p => p.reset());
+
+      container.classList.remove('hidden');
+      container.style.opacity = '1';
+      dashboard.classList.remove('active');
+
+      audio.init();
+
+      if (animId) cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(render);
+    }
+
+    // Spacebar to skip
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && isRunning) {
+        e.preventDefault();
+        finishIntro();
+      }
+    });
+
+    // Button Listeners
+    btnSkip.addEventListener('click', () => {
+      finishIntro();
+    });
+
+    btnAudio.addEventListener('click', () => {
+      audio.init();
+      const muted = audio.toggleMute();
+      btnAudio.classList.toggle('active', !muted);
+      textAudioStatus.innerText = muted ? 'SOUND: OFF' : 'SOUND: ON';
+    });
+
+    btnReplayNav.addEventListener('click', () => {
+      startIntro();
+    });
+
+    // Auto-start on load
+    window.addEventListener('DOMContentLoaded', () => {
+      startIntro();
+    });
+
+    // Handle user interaction to unlock Web Audio if restricted
+    window.addEventListener('click', () => {
+      if (!audio.initialized) {
+        audio.init();
+      } else {
+        audio.resume();
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>

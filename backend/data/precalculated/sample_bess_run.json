@@ -1,0 +1,533 @@
+{
+  "bess_specs": {
+    "power_mw": 50.0,
+    "energy_mwh": 200.0,
+    "duration_hours": 4.0,
+    "round_trip_efficiency_pct": 86.0,
+    "degradation_cost_usd_mwh": 4.0,
+    "node_id": "cardones_500",
+    "node_name": "Cardones 500 kV",
+    "substation": "S/E Cardones",
+    "zone": "Norte Chico"
+  },
+  "revenue_stacking_annual": {
+    "spot_arbitrage_usd": 5430148.3,
+    "spot_arbitrage_pct": 53.9,
+    "ds70_capacity_usd": 4536000.0,
+    "ds70_capacity_pct": 45.0,
+    "sscc_services_usd": 112500.0,
+    "sscc_services_pct": 1.1,
+    "total_revenue_usd": 10078648.3,
+    "revenue_per_kw_year_usd": 201.57
+  },
+  "ds70_regulatory_metrics": {
+    "firm_capacity_factor_pct": 72.0,
+    "firm_capacity_recognized_mw": 36.0,
+    "regulated_capacity_price_usd_kw_month": 10.5,
+    "annual_ds70_income_usd": 4536000.0
+  },
+  "financials": {
+    "total_capex_usd": 35280000.0,
+    "capex_per_kwh_usd": 176.4,
+    "capex_per_kw_usd": 705.6,
+    "capex_breakdown": {
+      "battery_cells_usd": 23000000.0,
+      "pcs_inverter_usd": 3250000.0,
+      "bop_infrastructure_usd": 5250000.0,
+      "epc_dev_contingency_usd": 3780000.0
+    },
+    "year1_opex_usd": 1229200.0,
+    "opex_breakdown": {
+      "fixed_om_usd": 700000.0,
+      "variable_om_insurance_usd": 529200.0
+    },
+    "year1_ebitda_usd": 8849448.3,
+    "ebitda_margin_pct": 87.8,
+    "npv_usd": 28315627.0,
+    "irr_15y_pct": 17.47,
+    "irr_20y_pct": 18.34,
+    "simple_payback_years": 5.09,
+    "discounted_payback_years": 6.85,
+    "lcos_usd_mwh": 66.22,
+    "proforma_20y_sample": [
+      {
+        "year": 1,
+        "revenue_arbitrage_usd": 5430148.3,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 112500.0,
+        "total_revenue_usd": 10078648.3,
+        "opex_usd": 1229200.0,
+        "ebitda_usd": 8849448.3,
+        "tax_usd": 1754311.0,
+        "free_cash_flow_usd": 7095137.2,
+        "discounted_fcf_usd": 6569571.5,
+        "cumulative_cash_flow_usd": -28184862.8
+      },
+      {
+        "year": 2,
+        "revenue_arbitrage_usd": 5348696.1,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 110812.5,
+        "total_revenue_usd": 9995508.6,
+        "opex_usd": 1253784.0,
+        "ebitda_usd": 8741724.6,
+        "tax_usd": 1725225.6,
+        "free_cash_flow_usd": 7016498.9,
+        "discounted_fcf_usd": 6015516.9,
+        "cumulative_cash_flow_usd": -21168363.8
+      },
+      {
+        "year": 3,
+        "revenue_arbitrage_usd": 5268465.6,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 109150.3,
+        "total_revenue_usd": 9913615.9,
+        "opex_usd": 1278859.7,
+        "ebitda_usd": 8634756.3,
+        "tax_usd": 1696344.2,
+        "free_cash_flow_usd": 6938412.1,
+        "discounted_fcf_usd": 5507935.2,
+        "cumulative_cash_flow_usd": -14229951.8
+      },
+      {
+        "year": 4,
+        "revenue_arbitrage_usd": 5189438.6,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 107513.1,
+        "total_revenue_usd": 9832951.7,
+        "opex_usd": 1304436.9,
+        "ebitda_usd": 8528514.8,
+        "tax_usd": 1667659.0,
+        "free_cash_flow_usd": 6860855.8,
+        "discounted_fcf_usd": 5042933.8,
+        "cumulative_cash_flow_usd": -7369095.9
+      },
+      {
+        "year": 5,
+        "revenue_arbitrage_usd": 5111597.1,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 105900.4,
+        "total_revenue_usd": 9753497.4,
+        "opex_usd": 1330525.6,
+        "ebitda_usd": 8422971.8,
+        "tax_usd": 1639162.4,
+        "free_cash_flow_usd": 6783809.4,
+        "discounted_fcf_usd": 4616946.7,
+        "cumulative_cash_flow_usd": -585286.5
+      },
+      {
+        "year": 6,
+        "revenue_arbitrage_usd": 5034923.1,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 104311.9,
+        "total_revenue_usd": 9675235.0,
+        "opex_usd": 1357136.1,
+        "ebitda_usd": 8318098.8,
+        "tax_usd": 1610846.7,
+        "free_cash_flow_usd": 6707252.1,
+        "discounted_fcf_usd": 4226706.6,
+        "cumulative_cash_flow_usd": 6121965.6
+      },
+      {
+        "year": 7,
+        "revenue_arbitrage_usd": 4959399.3,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 102747.2,
+        "total_revenue_usd": 9598146.4,
+        "opex_usd": 1384278.8,
+        "ebitda_usd": 8213867.6,
+        "tax_usd": 1582704.2,
+        "free_cash_flow_usd": 6631163.3,
+        "discounted_fcf_usd": 3869220.1,
+        "cumulative_cash_flow_usd": 12753129.0
+      },
+      {
+        "year": 8,
+        "revenue_arbitrage_usd": 4885008.3,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 101206.0,
+        "total_revenue_usd": 9522214.2,
+        "opex_usd": 1411964.4,
+        "ebitda_usd": 8110249.8,
+        "tax_usd": 1554727.4,
+        "free_cash_flow_usd": 6555522.4,
+        "discounted_fcf_usd": 3541744.8,
+        "cumulative_cash_flow_usd": 19308651.3
+      },
+      {
+        "year": 9,
+        "revenue_arbitrage_usd": 4811733.1,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 99687.9,
+        "total_revenue_usd": 9447421.0,
+        "opex_usd": 1440203.7,
+        "ebitda_usd": 8007217.3,
+        "tax_usd": 1526908.7,
+        "free_cash_flow_usd": 6480308.6,
+        "discounted_fcf_usd": 3241767.7,
+        "cumulative_cash_flow_usd": 25788960.0
+      },
+      {
+        "year": 10,
+        "revenue_arbitrage_usd": 4739557.1,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 98192.6,
+        "total_revenue_usd": 9373749.7,
+        "opex_usd": 1469007.8,
+        "ebitda_usd": 7904741.9,
+        "tax_usd": 1499240.3,
+        "free_cash_flow_usd": 6405501.6,
+        "discounted_fcf_usd": 2966986.6,
+        "cumulative_cash_flow_usd": 32194461.6
+      },
+      {
+        "year": 11,
+        "revenue_arbitrage_usd": 4668463.8,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 96719.7,
+        "total_revenue_usd": 9301183.5,
+        "opex_usd": 1498387.9,
+        "ebitda_usd": 7802795.5,
+        "tax_usd": 1471714.8,
+        "free_cash_flow_usd": 6331080.7,
+        "discounted_fcf_usd": 2715292.0,
+        "cumulative_cash_flow_usd": 38525542.3
+      },
+      {
+        "year": 12,
+        "revenue_arbitrage_usd": 4598436.8,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 95268.9,
+        "total_revenue_usd": 9229705.7,
+        "opex_usd": 1528355.7,
+        "ebitda_usd": 7701350.0,
+        "tax_usd": 1444324.5,
+        "free_cash_flow_usd": 6257025.5,
+        "discounted_fcf_usd": 2484750.9,
+        "cumulative_cash_flow_usd": 44782567.8
+      },
+      {
+        "year": 13,
+        "revenue_arbitrage_usd": 4529460.3,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 93839.8,
+        "total_revenue_usd": 9159300.1,
+        "opex_usd": 1558922.8,
+        "ebitda_usd": 7600377.3,
+        "tax_usd": 1417061.9,
+        "free_cash_flow_usd": 6183315.4,
+        "discounted_fcf_usd": 2273592.3,
+        "cumulative_cash_flow_usd": 50965883.2
+      },
+      {
+        "year": 14,
+        "revenue_arbitrage_usd": 4461518.4,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 92432.2,
+        "total_revenue_usd": 9089950.6,
+        "opex_usd": 1590101.3,
+        "ebitda_usd": 7499849.4,
+        "tax_usd": 1389919.3,
+        "free_cash_flow_usd": 6109930.0,
+        "discounted_fcf_usd": 2080193.1,
+        "cumulative_cash_flow_usd": 57075813.3
+      },
+      {
+        "year": 15,
+        "revenue_arbitrage_usd": 4394595.6,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 91045.8,
+        "total_revenue_usd": 9021641.4,
+        "opex_usd": 1621903.3,
+        "ebitda_usd": 7399738.1,
+        "tax_usd": 1362889.3,
+        "free_cash_flow_usd": 6036848.8,
+        "discounted_fcf_usd": 1903066.5,
+        "cumulative_cash_flow_usd": 63112662.1
+      },
+      {
+        "year": 16,
+        "revenue_arbitrage_usd": 4328676.7,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 89680.1,
+        "total_revenue_usd": 8954356.7,
+        "opex_usd": 1654341.4,
+        "ebitda_usd": 7300015.4,
+        "tax_usd": 1971004.2,
+        "free_cash_flow_usd": 5329011.2,
+        "discounted_fcf_usd": 1555487.6,
+        "cumulative_cash_flow_usd": 68441673.3
+      },
+      {
+        "year": 17,
+        "revenue_arbitrage_usd": 4263746.5,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 88334.9,
+        "total_revenue_usd": 8888081.4,
+        "opex_usd": 1687428.2,
+        "ebitda_usd": 7200653.2,
+        "tax_usd": 1944176.4,
+        "free_cash_flow_usd": 5256476.8,
+        "discounted_fcf_usd": 1420662.5,
+        "cumulative_cash_flow_usd": 73698150.1
+      },
+      {
+        "year": 18,
+        "revenue_arbitrage_usd": 4199790.3,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 87009.9,
+        "total_revenue_usd": 8822800.2,
+        "opex_usd": 1721176.8,
+        "ebitda_usd": 7101623.4,
+        "tax_usd": 1917438.3,
+        "free_cash_flow_usd": 5184185.1,
+        "discounted_fcf_usd": 1297337.3,
+        "cumulative_cash_flow_usd": 78882335.2
+      },
+      {
+        "year": 19,
+        "revenue_arbitrage_usd": 4136793.5,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 85704.7,
+        "total_revenue_usd": 8758498.2,
+        "opex_usd": 1755600.3,
+        "ebitda_usd": 7002897.9,
+        "tax_usd": 1890782.4,
+        "free_cash_flow_usd": 5112115.5,
+        "discounted_fcf_usd": 1184538.8,
+        "cumulative_cash_flow_usd": 83994450.7
+      },
+      {
+        "year": 20,
+        "revenue_arbitrage_usd": 4074741.6,
+        "revenue_capacity_ds70_usd": 4536000.0,
+        "revenue_sscc_usd": 84419.1,
+        "total_revenue_usd": 8695160.7,
+        "opex_usd": 1790712.3,
+        "ebitda_usd": 6904448.4,
+        "tax_usd": 1864201.1,
+        "free_cash_flow_usd": 5040247.3,
+        "discounted_fcf_usd": 1081376.0,
+        "cumulative_cash_flow_usd": 89034698.0
+      }
+    ]
+  },
+  "dispatch_schedule_24h": [
+    {
+      "hour": 0,
+      "cmg_usd_mwh": 48.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 42.5,
+      "net_flow_mw": 42.5,
+      "soc_mwh": 54.17,
+      "soc_pct": 27.1
+    },
+    {
+      "hour": 1,
+      "cmg_usd_mwh": 42.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 40.96,
+      "net_flow_mw": 40.96,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 2,
+      "cmg_usd_mwh": 38.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 3,
+      "cmg_usd_mwh": 36.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 4,
+      "cmg_usd_mwh": 35.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 5,
+      "cmg_usd_mwh": 38.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 6,
+      "cmg_usd_mwh": 42.0,
+      "charge_mw": 0.0,
+      "discharge_mw": -0.0,
+      "net_flow_mw": -0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 7,
+      "cmg_usd_mwh": 35.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 8,
+      "cmg_usd_mwh": 8.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 9,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 10,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 10.0,
+      "soc_pct": 5.0
+    },
+    {
+      "hour": 11,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 24.1,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -24.1,
+      "soc_mwh": 32.35,
+      "soc_pct": 16.2
+    },
+    {
+      "hour": 12,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 42.5,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -42.5,
+      "soc_mwh": 71.76,
+      "soc_pct": 35.9
+    },
+    {
+      "hour": 13,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 42.5,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -42.5,
+      "soc_mwh": 111.17,
+      "soc_pct": 55.6
+    },
+    {
+      "hour": 14,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 42.5,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -42.5,
+      "soc_mwh": 150.59,
+      "soc_pct": 75.3
+    },
+    {
+      "hour": 15,
+      "cmg_usd_mwh": 0.0,
+      "charge_mw": 42.5,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -42.5,
+      "soc_mwh": 190.0,
+      "soc_pct": 95.0
+    },
+    {
+      "hour": 16,
+      "cmg_usd_mwh": 4.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 190.0,
+      "soc_pct": 95.0
+    },
+    {
+      "hour": 17,
+      "cmg_usd_mwh": 25.0,
+      "charge_mw": 0.0,
+      "discharge_mw": -0.0,
+      "net_flow_mw": -0.0,
+      "soc_mwh": 190.0,
+      "soc_pct": 95.0
+    },
+    {
+      "hour": 18,
+      "cmg_usd_mwh": 75.0,
+      "charge_mw": -0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 190.0,
+      "soc_pct": 95.0
+    },
+    {
+      "hour": 19,
+      "cmg_usd_mwh": 115.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 35.01,
+      "net_flow_mw": 35.01,
+      "soc_mwh": 152.24,
+      "soc_pct": 76.1
+    },
+    {
+      "hour": 20,
+      "cmg_usd_mwh": 138.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 42.5,
+      "net_flow_mw": 42.5,
+      "soc_mwh": 106.42,
+      "soc_pct": 53.2
+    },
+    {
+      "hour": 21,
+      "cmg_usd_mwh": 122.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 42.5,
+      "net_flow_mw": 42.5,
+      "soc_mwh": 60.59,
+      "soc_pct": 30.3
+    },
+    {
+      "hour": 22,
+      "cmg_usd_mwh": 92.0,
+      "charge_mw": 0.0,
+      "discharge_mw": 0.0,
+      "net_flow_mw": 0.0,
+      "soc_mwh": 60.59,
+      "soc_pct": 30.3
+    },
+    {
+      "hour": 23,
+      "cmg_usd_mwh": 65.0,
+      "charge_mw": 42.5,
+      "discharge_mw": 0.0,
+      "net_flow_mw": -42.5,
+      "soc_mwh": 100.0,
+      "soc_pct": 50.0
+    }
+  ]
+}

@@ -1,0 +1,573 @@
+{
+  "scenarios": [
+    {
+      "id": "S1_BASE_CEN",
+      "name": "S1: Caso Base Coordinador Eléctrico Nacional (CEN)",
+      "short_name": "Caso Base CEN",
+      "color": "#3B82F6",
+      "description": "Trayectoria oficial del Plan de Expansión de la Transmisión y Generación del CEN. Retiro paulatino del carbón hacia 2040, incorporación ordenada de 3.5 GW BESS a 2030 y entrada de Kimal-Lo Aguirre a finales de 2029.",
+      "assumptions": {
+        "coal_phaseout_year": 2040,
+        "bess_additions_2030_gw": 3.8,
+        "bess_additions_2040_gw": 9.2,
+        "hydro_condition": "Hidrología Media Histórica (P50)",
+        "kimal_lo_aguirre_cod": 2029,
+        "carbon_tax_usd_ton": 5.0,
+        "fuel_price_trend": "Estable conforme a cotizaciones Brent y Henry Hub futuro"
+      },
+      "metrics_by_year": {
+        "2025": {
+          "avg_cmg": 62.4,
+          "solar_valley_cmg": 4.2,
+          "peak_cmg": 118.5,
+          "spread_usd": 114.3,
+          "curtailment_twh": 3.4,
+          "curtailment_pct": 16.5,
+          "bess_gw": 1.2
+        },
+        "2026": {
+          "avg_cmg": 60.1,
+          "solar_valley_cmg": 2.8,
+          "peak_cmg": 122.0,
+          "spread_usd": 119.2,
+          "curtailment_twh": 4.1,
+          "curtailment_pct": 18.2,
+          "bess_gw": 1.9
+        },
+        "2027": {
+          "avg_cmg": 58.5,
+          "solar_valley_cmg": 1.5,
+          "peak_cmg": 125.4,
+          "spread_usd": 123.9,
+          "curtailment_twh": 4.9,
+          "curtailment_pct": 19.8,
+          "bess_gw": 2.7
+        },
+        "2028": {
+          "avg_cmg": 56.8,
+          "solar_valley_cmg": 0.8,
+          "peak_cmg": 128.0,
+          "spread_usd": 127.2,
+          "curtailment_twh": 5.6,
+          "curtailment_pct": 21.0,
+          "bess_gw": 3.5
+        },
+        "2029": {
+          "avg_cmg": 54.2,
+          "solar_valley_cmg": 8.5,
+          "peak_cmg": 115.0,
+          "spread_usd": 106.5,
+          "curtailment_twh": 3.2,
+          "curtailment_pct": 11.4,
+          "bess_gw": 4.2
+        },
+        "2030": {
+          "avg_cmg": 52.0,
+          "solar_valley_cmg": 12.0,
+          "peak_cmg": 108.0,
+          "spread_usd": 96.0,
+          "curtailment_twh": 2.5,
+          "curtailment_pct": 8.5,
+          "bess_gw": 4.8
+        },
+        "2032": {
+          "avg_cmg": 49.5,
+          "solar_valley_cmg": 14.5,
+          "peak_cmg": 102.0,
+          "spread_usd": 87.5,
+          "curtailment_twh": 2.1,
+          "curtailment_pct": 6.8,
+          "bess_gw": 5.9
+        },
+        "2035": {
+          "avg_cmg": 46.8,
+          "solar_valley_cmg": 16.2,
+          "peak_cmg": 96.5,
+          "spread_usd": 80.3,
+          "curtailment_twh": 1.8,
+          "curtailment_pct": 5.2,
+          "bess_gw": 7.4
+        },
+        "2040": {
+          "avg_cmg": 44.0,
+          "solar_valley_cmg": 18.0,
+          "peak_cmg": 90.0,
+          "spread_usd": 72.0,
+          "curtailment_twh": 1.4,
+          "curtailment_pct": 3.8,
+          "bess_gw": 9.2
+        }
+      }
+    },
+    {
+      "id": "S2_HIGH_RE_FAST_EXIT",
+      "name": "S2: Alta Penetración Renovable & Retiro Acelerado de Carbón",
+      "short_name": "Retiro Acelerado & Spreads Altos",
+      "color": "#10B981",
+      "description": "Retiro total del parque a carbón adelantado a 2030 por mandatos ambientales y descarbonización voluntaria. Crecimiento explosivo de solar/eólico. Spreads extremos hasta 2030 debido a horas punta abastecidas por diésel y GNL abierto.",
+      "assumptions": {
+        "coal_phaseout_year": 2030,
+        "bess_additions_2030_gw": 5.4,
+        "bess_additions_2040_gw": 13.5,
+        "hydro_condition": "Hidrología Media Histórica (P50)",
+        "kimal_lo_aguirre_cod": 2029,
+        "carbon_tax_usd_ton": 15.0,
+        "fuel_price_trend": "Mayor volatilidad de GNL importado"
+      },
+      "metrics_by_year": {
+        "2025": {
+          "avg_cmg": 66.8,
+          "solar_valley_cmg": 2.5,
+          "peak_cmg": 134.0,
+          "spread_usd": 131.5,
+          "curtailment_twh": 3.9,
+          "curtailment_pct": 18.2,
+          "bess_gw": 1.4
+        },
+        "2026": {
+          "avg_cmg": 68.2,
+          "solar_valley_cmg": 1.2,
+          "peak_cmg": 142.5,
+          "spread_usd": 141.3,
+          "curtailment_twh": 5.2,
+          "curtailment_pct": 21.5,
+          "bess_gw": 2.4
+        },
+        "2027": {
+          "avg_cmg": 70.5,
+          "solar_valley_cmg": 0.4,
+          "peak_cmg": 152.0,
+          "spread_usd": 151.6,
+          "curtailment_twh": 6.8,
+          "curtailment_pct": 25.0,
+          "bess_gw": 3.6
+        },
+        "2028": {
+          "avg_cmg": 72.0,
+          "solar_valley_cmg": 0.0,
+          "peak_cmg": 160.0,
+          "spread_usd": 160.0,
+          "curtailment_twh": 7.9,
+          "curtailment_pct": 27.4,
+          "bess_gw": 4.6
+        },
+        "2029": {
+          "avg_cmg": 62.5,
+          "solar_valley_cmg": 6.8,
+          "peak_cmg": 136.0,
+          "spread_usd": 129.2,
+          "curtailment_twh": 4.5,
+          "curtailment_pct": 14.5,
+          "bess_gw": 5.8
+        },
+        "2030": {
+          "avg_cmg": 58.0,
+          "solar_valley_cmg": 10.5,
+          "peak_cmg": 124.0,
+          "spread_usd": 113.5,
+          "curtailment_twh": 3.8,
+          "curtailment_pct": 11.2,
+          "bess_gw": 7.0
+        },
+        "2032": {
+          "avg_cmg": 53.4,
+          "solar_valley_cmg": 12.8,
+          "peak_cmg": 112.0,
+          "spread_usd": 99.2,
+          "curtailment_twh": 3.0,
+          "curtailment_pct": 8.4,
+          "bess_gw": 8.8
+        },
+        "2035": {
+          "avg_cmg": 48.2,
+          "solar_valley_cmg": 15.0,
+          "peak_cmg": 104.0,
+          "spread_usd": 89.0,
+          "curtailment_twh": 2.4,
+          "curtailment_pct": 6.2,
+          "bess_gw": 11.0
+        },
+        "2040": {
+          "avg_cmg": 45.0,
+          "solar_valley_cmg": 17.5,
+          "peak_cmg": 94.0,
+          "spread_usd": 76.5,
+          "curtailment_twh": 1.7,
+          "curtailment_pct": 4.1,
+          "bess_gw": 13.5
+        }
+      }
+    },
+    {
+      "id": "S3_DRY_HYDRO_STRESS",
+      "name": "S3: Estrés Hidrológico (Sequía Prolongada P90)",
+      "short_name": "Estrés Hidrológico",
+      "color": "#EF4444",
+      "description": "Escenario de sequía crítica multianual en cuencas de los ríos Laja, Maule, Biobío y Rapel. Reducción severa de generación hidroeléctrica de embalse y pasada. Precios nocturnos disparados por uso intensivo de centrales a petróleo diésel y carbón forzado.",
+      "assumptions": {
+        "coal_phaseout_year": 2038,
+        "bess_additions_2030_gw": 4.5,
+        "bess_additions_2040_gw": 10.5,
+        "hydro_condition": "Condición Muy Seca (P90 / Sequía extrema)",
+        "kimal_lo_aguirre_cod": 2029,
+        "carbon_tax_usd_ton": 5.0,
+        "fuel_price_trend": "Mayor despacho forzado de turbinas diésel de respaldo"
+      },
+      "metrics_by_year": {
+        "2025": {
+          "avg_cmg": 78.4,
+          "solar_valley_cmg": 8.5,
+          "peak_cmg": 165.0,
+          "spread_usd": 156.5,
+          "curtailment_twh": 2.8,
+          "curtailment_pct": 13.5,
+          "bess_gw": 1.2
+        },
+        "2026": {
+          "avg_cmg": 82.0,
+          "solar_valley_cmg": 6.4,
+          "peak_cmg": 174.0,
+          "spread_usd": 167.6,
+          "curtailment_twh": 3.4,
+          "curtailment_pct": 14.8,
+          "bess_gw": 2.0
+        },
+        "2027": {
+          "avg_cmg": 85.2,
+          "solar_valley_cmg": 4.8,
+          "peak_cmg": 182.5,
+          "spread_usd": 177.7,
+          "curtailment_twh": 4.1,
+          "curtailment_pct": 16.2,
+          "bess_gw": 2.9
+        },
+        "2028": {
+          "avg_cmg": 87.0,
+          "solar_valley_cmg": 3.5,
+          "peak_cmg": 188.0,
+          "spread_usd": 184.5,
+          "curtailment_twh": 4.8,
+          "curtailment_pct": 17.5,
+          "bess_gw": 3.8
+        },
+        "2029": {
+          "avg_cmg": 74.5,
+          "solar_valley_cmg": 12.0,
+          "peak_cmg": 160.0,
+          "spread_usd": 148.0,
+          "curtailment_twh": 2.7,
+          "curtailment_pct": 9.4,
+          "bess_gw": 4.8
+        },
+        "2030": {
+          "avg_cmg": 70.0,
+          "solar_valley_cmg": 15.0,
+          "peak_cmg": 148.0,
+          "spread_usd": 133.0,
+          "curtailment_twh": 2.2,
+          "curtailment_pct": 7.5,
+          "bess_gw": 5.6
+        },
+        "2032": {
+          "avg_cmg": 64.0,
+          "solar_valley_cmg": 17.2,
+          "peak_cmg": 136.0,
+          "spread_usd": 118.8,
+          "curtailment_twh": 1.9,
+          "curtailment_pct": 6.0,
+          "bess_gw": 6.8
+        },
+        "2035": {
+          "avg_cmg": 58.5,
+          "solar_valley_cmg": 19.0,
+          "peak_cmg": 122.0,
+          "spread_usd": 103.0,
+          "curtailment_twh": 1.6,
+          "curtailment_pct": 4.8,
+          "bess_gw": 8.4
+        },
+        "2040": {
+          "avg_cmg": 52.0,
+          "solar_valley_cmg": 21.0,
+          "peak_cmg": 108.0,
+          "spread_usd": 87.0,
+          "curtailment_twh": 1.3,
+          "curtailment_pct": 3.6,
+          "bess_gw": 10.5
+        }
+      }
+    },
+    {
+      "id": "S4_KIMAL_LO_AGUIRRE_CONVERGENCE",
+      "name": "S4: Interconexión Kimal-Lo Aguirre 2029 & Descongestión",
+      "short_name": "Kimal-Lo Aguirre Descongestión",
+      "color": "#8B5CF6",
+      "description": "Entrada puntual y optimizada de la megalínea HVDC Kimal-Lo Aguirre (+/- 600 kV, 3000 MW, 1344 km) en diciembre 2028 / enero 2029. Evacuación masiva de excedentes solares del desierto de Atacama hacia Santiago, colapso de precios cero en el norte y reducción de spreads.",
+      "assumptions": {
+        "coal_phaseout_year": 2035,
+        "bess_additions_2030_gw": 4.2,
+        "bess_additions_2040_gw": 10.0,
+        "hydro_condition": "Hidrología Media Histórica (P50)",
+        "kimal_lo_aguirre_cod": 2028,
+        "carbon_tax_usd_ton": 8.0,
+        "fuel_price_trend": "Eficiencia máxima en transporte troncal y despacho económico unificado"
+      },
+      "metrics_by_year": {
+        "2025": {
+          "avg_cmg": 62.0,
+          "solar_valley_cmg": 4.0,
+          "peak_cmg": 118.0,
+          "spread_usd": 114.0,
+          "curtailment_twh": 3.4,
+          "curtailment_pct": 16.5,
+          "bess_gw": 1.2
+        },
+        "2026": {
+          "avg_cmg": 59.8,
+          "solar_valley_cmg": 2.5,
+          "peak_cmg": 121.0,
+          "spread_usd": 118.5,
+          "curtailment_twh": 4.0,
+          "curtailment_pct": 18.0,
+          "bess_gw": 1.9
+        },
+        "2027": {
+          "avg_cmg": 58.0,
+          "solar_valley_cmg": 1.2,
+          "peak_cmg": 124.0,
+          "spread_usd": 122.8,
+          "curtailment_twh": 4.8,
+          "curtailment_pct": 19.5,
+          "bess_gw": 2.7
+        },
+        "2028": {
+          "avg_cmg": 53.0,
+          "solar_valley_cmg": 10.5,
+          "peak_cmg": 110.0,
+          "spread_usd": 99.5,
+          "curtailment_twh": 2.8,
+          "curtailment_pct": 9.8,
+          "bess_gw": 3.6
+        },
+        "2029": {
+          "avg_cmg": 48.5,
+          "solar_valley_cmg": 16.0,
+          "peak_cmg": 98.0,
+          "spread_usd": 82.0,
+          "curtailment_twh": 1.8,
+          "curtailment_pct": 6.2,
+          "bess_gw": 4.4
+        },
+        "2030": {
+          "avg_cmg": 46.0,
+          "solar_valley_cmg": 18.5,
+          "peak_cmg": 92.0,
+          "spread_usd": 73.5,
+          "curtailment_twh": 1.4,
+          "curtailment_pct": 4.8,
+          "bess_gw": 5.2
+        },
+        "2032": {
+          "avg_cmg": 43.5,
+          "solar_valley_cmg": 20.0,
+          "peak_cmg": 86.0,
+          "spread_usd": 66.0,
+          "curtailment_twh": 1.1,
+          "curtailment_pct": 3.7,
+          "bess_gw": 6.5
+        },
+        "2035": {
+          "avg_cmg": 41.0,
+          "solar_valley_cmg": 21.5,
+          "peak_cmg": 82.0,
+          "spread_usd": 60.5,
+          "curtailment_twh": 0.9,
+          "curtailment_pct": 2.9,
+          "bess_gw": 8.0
+        },
+        "2040": {
+          "avg_cmg": 39.0,
+          "solar_valley_cmg": 23.0,
+          "peak_cmg": 78.0,
+          "spread_usd": 55.0,
+          "curtailment_twh": 0.7,
+          "curtailment_pct": 2.2,
+          "bess_gw": 10.0
+        }
+      }
+    }
+  ],
+  "spread_forecast_matrix": [
+    {
+      "year": 2025,
+      "S1_BASE_CEN_spread": 114.3,
+      "S1_BASE_CEN_curtailment": 16.5,
+      "S1_BASE_CEN_bess_gw": 1.2,
+      "S1_BASE_CEN_avg_cmg": 62.4,
+      "S2_HIGH_RE_FAST_EXIT_spread": 131.5,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 18.2,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 1.4,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 66.8,
+      "S3_DRY_HYDRO_STRESS_spread": 156.5,
+      "S3_DRY_HYDRO_STRESS_curtailment": 13.5,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 1.2,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 78.4,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 114.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 16.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 1.2,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 62.0
+    },
+    {
+      "year": 2026,
+      "S1_BASE_CEN_spread": 119.2,
+      "S1_BASE_CEN_curtailment": 18.2,
+      "S1_BASE_CEN_bess_gw": 1.9,
+      "S1_BASE_CEN_avg_cmg": 60.1,
+      "S2_HIGH_RE_FAST_EXIT_spread": 141.3,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 21.5,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 2.4,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 68.2,
+      "S3_DRY_HYDRO_STRESS_spread": 167.6,
+      "S3_DRY_HYDRO_STRESS_curtailment": 14.8,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 2.0,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 82.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 118.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 18.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 1.9,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 59.8
+    },
+    {
+      "year": 2027,
+      "S1_BASE_CEN_spread": 123.9,
+      "S1_BASE_CEN_curtailment": 19.8,
+      "S1_BASE_CEN_bess_gw": 2.7,
+      "S1_BASE_CEN_avg_cmg": 58.5,
+      "S2_HIGH_RE_FAST_EXIT_spread": 151.6,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 25.0,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 3.6,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 70.5,
+      "S3_DRY_HYDRO_STRESS_spread": 177.7,
+      "S3_DRY_HYDRO_STRESS_curtailment": 16.2,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 2.9,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 85.2,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 122.8,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 19.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 2.7,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 58.0
+    },
+    {
+      "year": 2028,
+      "S1_BASE_CEN_spread": 127.2,
+      "S1_BASE_CEN_curtailment": 21.0,
+      "S1_BASE_CEN_bess_gw": 3.5,
+      "S1_BASE_CEN_avg_cmg": 56.8,
+      "S2_HIGH_RE_FAST_EXIT_spread": 160.0,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 27.4,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 4.6,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 72.0,
+      "S3_DRY_HYDRO_STRESS_spread": 184.5,
+      "S3_DRY_HYDRO_STRESS_curtailment": 17.5,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 3.8,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 87.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 99.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 9.8,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 3.6,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 53.0
+    },
+    {
+      "year": 2029,
+      "S1_BASE_CEN_spread": 106.5,
+      "S1_BASE_CEN_curtailment": 11.4,
+      "S1_BASE_CEN_bess_gw": 4.2,
+      "S1_BASE_CEN_avg_cmg": 54.2,
+      "S2_HIGH_RE_FAST_EXIT_spread": 129.2,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 14.5,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 5.8,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 62.5,
+      "S3_DRY_HYDRO_STRESS_spread": 148.0,
+      "S3_DRY_HYDRO_STRESS_curtailment": 9.4,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 4.8,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 74.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 82.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 6.2,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 4.4,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 48.5
+    },
+    {
+      "year": 2030,
+      "S1_BASE_CEN_spread": 96.0,
+      "S1_BASE_CEN_curtailment": 8.5,
+      "S1_BASE_CEN_bess_gw": 4.8,
+      "S1_BASE_CEN_avg_cmg": 52.0,
+      "S2_HIGH_RE_FAST_EXIT_spread": 113.5,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 11.2,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 7.0,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 58.0,
+      "S3_DRY_HYDRO_STRESS_spread": 133.0,
+      "S3_DRY_HYDRO_STRESS_curtailment": 7.5,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 5.6,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 70.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 73.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 4.8,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 5.2,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 46.0
+    },
+    {
+      "year": 2032,
+      "S1_BASE_CEN_spread": 87.5,
+      "S1_BASE_CEN_curtailment": 6.8,
+      "S1_BASE_CEN_bess_gw": 5.9,
+      "S1_BASE_CEN_avg_cmg": 49.5,
+      "S2_HIGH_RE_FAST_EXIT_spread": 99.2,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 8.4,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 8.8,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 53.4,
+      "S3_DRY_HYDRO_STRESS_spread": 118.8,
+      "S3_DRY_HYDRO_STRESS_curtailment": 6.0,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 6.8,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 64.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 66.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 3.7,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 6.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 43.5
+    },
+    {
+      "year": 2035,
+      "S1_BASE_CEN_spread": 80.3,
+      "S1_BASE_CEN_curtailment": 5.2,
+      "S1_BASE_CEN_bess_gw": 7.4,
+      "S1_BASE_CEN_avg_cmg": 46.8,
+      "S2_HIGH_RE_FAST_EXIT_spread": 89.0,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 6.2,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 11.0,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 48.2,
+      "S3_DRY_HYDRO_STRESS_spread": 103.0,
+      "S3_DRY_HYDRO_STRESS_curtailment": 4.8,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 8.4,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 58.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 60.5,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 2.9,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 8.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 41.0
+    },
+    {
+      "year": 2040,
+      "S1_BASE_CEN_spread": 72.0,
+      "S1_BASE_CEN_curtailment": 3.8,
+      "S1_BASE_CEN_bess_gw": 9.2,
+      "S1_BASE_CEN_avg_cmg": 44.0,
+      "S2_HIGH_RE_FAST_EXIT_spread": 76.5,
+      "S2_HIGH_RE_FAST_EXIT_curtailment": 4.1,
+      "S2_HIGH_RE_FAST_EXIT_bess_gw": 13.5,
+      "S2_HIGH_RE_FAST_EXIT_avg_cmg": 45.0,
+      "S3_DRY_HYDRO_STRESS_spread": 87.0,
+      "S3_DRY_HYDRO_STRESS_curtailment": 3.6,
+      "S3_DRY_HYDRO_STRESS_bess_gw": 10.5,
+      "S3_DRY_HYDRO_STRESS_avg_cmg": 52.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_spread": 55.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_curtailment": 2.2,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_bess_gw": 10.0,
+      "S4_KIMAL_LO_AGUIRRE_CONVERGENCE_avg_cmg": 39.0
+    }
+  ]
+}
