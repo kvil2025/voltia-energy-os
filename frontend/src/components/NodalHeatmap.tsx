@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { CHILEAN_NODES, TRANSMISSION_LINES } from '../data/chileanGridData';
+import { CHILEAN_NODES } from '../data/chileanGridData';
 import { ChileanNode } from '../types/energy';
-import { MapPin, Filter, ArrowUpRight, AlertCircle, Zap, Shield, CheckCircle } from 'lucide-react';
+import { InteractiveGisMap } from './InteractiveGisMap';
+import { MapPin, ArrowUpRight, Zap, Maximize2, Minimize2, Map as MapIcon, Compass } from 'lucide-react';
 
 interface NodalHeatmapProps {
   selectedNodeId: string;
@@ -13,7 +14,7 @@ export const NodalHeatmap: React.FC<NodalHeatmapProps> = ({
   onSelectNode,
 }) => {
   const [zoneFilter, setZoneFilter] = useState<string>('ALL');
-  const [hoveredNode, setHoveredNode] = useState<ChileanNode | null>(null);
+  const [isMapExpanded, setIsMapExpanded] = useState<boolean>(false);
 
   const zones = ['ALL', 'Norte Grande', 'Norte Chico', 'Centro', 'Sur'];
 
@@ -29,291 +30,216 @@ export const NodalHeatmap: React.FC<NodalHeatmapProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="font-mono text-[10px] tracking-widest text-[#00e5ff] uppercase px-2 py-0.5 rounded border border-[#00e5ff]/30 bg-[#00e5ff]/5">
-              MODULE [B] // TRANSMISSION_SPINE
+              MODULE [B] // TRANSMISSION_SPINE_GIS
             </span>
             <span className="text-xs font-mono text-gray-400">
-              SEN 500kV / 220kV TRUNK TOPOLOGY
+              SEN 500kV / 220kV TOPOLOGY & OPENTOPO CONTOURS
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tightest text-white">
             Nodal Congestion & Curtailment Heatmap
           </h2>
           <p className="text-xs sm:text-sm text-gray-400 font-normal mt-0.5">
-            Geospatial nodal pricing spreads, zero-marginal cost hours, and transmission bottleneck analysis.
+            Visor geoespacial profesional de subestaciones, corredores troncales y curvas de nivel topográficas en tiempo real.
           </p>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-white/[0.03] border border-white/10 overflow-x-auto">
-          {zones.map((z) => (
-            <button
-              key={z}
-              onClick={() => setZoneFilter(z)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all whitespace-nowrap ${
-                zoneFilter === z
-                  ? 'bg-white text-black font-semibold shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              {z}
-            </button>
-          ))}
+        {/* Controls: Zone Filter & Map Size Toggle */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Zone Filter Pills */}
+          <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-white/[0.03] border border-white/10 overflow-x-auto">
+            {zones.map((z) => (
+              <button
+                key={z}
+                onClick={() => setZoneFilter(z)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all whitespace-nowrap ${
+                  zoneFilter === z
+                    ? 'bg-white text-black font-semibold shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {z}
+              </button>
+            ))}
+          </div>
+
+          {/* Expand Map Toggle */}
+          <button
+            onClick={() => setIsMapExpanded(!isMapExpanded)}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-mono text-gray-300 hover:text-white transition-all"
+            title={isMapExpanded ? 'Vista Dividida (Mapa + Tabla)' : 'Expandir Mapa a Ancho Completo'}
+          >
+            {isMapExpanded ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5 text-[#00e5ff]" />
+                <span>Vista Dividida</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-[#00e5ff]" />
+                <span>Expandir Mapa</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Main Grid: Interactive Geographic Vector Spine (Left) & Tabular Metric Grid (Right) */}
+      {/* Main Grid: Interactive GIS Map & Nodal Registry */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
         
-        {/* Geographic Vector Transmission Map (4 cols) */}
-        <div className="lg:col-span-4 bg-[#090b10] rounded-2xl p-4 border border-white/10 flex flex-col items-center justify-between relative overflow-hidden">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-white/5 text-[11px] font-mono text-gray-400">
-            <span className="flex items-center gap-1.5 text-white">
-              <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-pulse" />
-              CHILEAN SPINE (SEN)
-            </span>
-            <span>220kV / 500kV</span>
-          </div>
-
-          {/* SVG Map of Chile Spine */}
-          <div className="w-full h-[460px] relative flex items-center justify-center my-2">
-            <svg
-              className="w-full h-full max-w-[260px]"
-              viewBox="0 0 200 440"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              {/* Reference geographical coastline guide */}
-              <path
-                d="M 90 20 Q 85 80 80 140 T 70 240 T 65 340 T 60 420"
-                fill="none"
-                stroke="rgba(255,255,255,0.06)"
-                strokeWidth="24"
-                strokeLinecap="round"
-              />
-
-              {/* Transmission Corridor Lines */}
-              {TRANSMISSION_LINES.map((line, idx) => {
-                const nodeFrom = CHILEAN_NODES.find((n) => n.id === line.from);
-                const nodeTo = CHILEAN_NODES.find((n) => n.id === line.to);
-                if (!nodeFrom || !nodeTo) return null;
-
-                // Map coordinates to SVG canvas (latitudes -20 to -42)
-                const y1 = ((nodeFrom.lat - -20) / (-43 - -20)) * 380 + 30;
-                const x1 = 80 + (nodeFrom.lon - -70) * 15;
-                const y2 = ((nodeTo.lat - -20) / (-43 - -20)) * 380 + 30;
-                const x2 = 80 + (nodeTo.lon - -70) * 15;
-
-                const isCongested = line.status === 'CONGESTED' || line.status === 'SATURATED' || line.status === 'CRITICAL_CONGESTION';
-                const strokeColor = isCongested ? '#f59e0b' : '#00e5ff';
-                const strokeWidth = line.voltage === 500 ? 2.5 : 1.5;
-
-                return (
-                  <g key={idx}>
-                    <line
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke={strokeColor}
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={isCongested ? '4,3' : undefined}
-                      opacity={0.65}
-                    />
-                  </g>
-                );
-              })}
-
-              {/* Substations (Nodes) */}
-              {CHILEAN_NODES.map((node) => {
-                const y = ((node.lat - -20) / (-43 - -20)) * 380 + 30;
-                const x = 80 + (node.lon - -70) * 15;
-                const isSelected = selectedNodeId === node.id;
-                const isHovered = hoveredNode?.id === node.id;
-                const isFiltered = zoneFilter === 'ALL' || node.zone === zoneFilter;
-
-                return (
-                  <g
-                    key={node.id}
-                    onClick={() => onSelectNode(node)}
-                    onMouseEnter={() => setHoveredNode(node)}
-                    onMouseLeave={() => setHoveredNode(null)}
-                    className="cursor-pointer"
-                    opacity={isFiltered ? 1 : 0.25}
-                  >
-                    {/* Outer glow ring if selected */}
-                    {isSelected && (
-                      <circle
-                        cx={x}
-                        cy={y}
-                        r="11"
-                        fill="none"
-                        stroke="#00e5ff"
-                        strokeWidth="1.5"
-                        className="animate-ping"
-                      />
-                    )}
-
-                    {/* Node Circle */}
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={node.voltageKv === 500 ? 5.5 : 4}
-                      fill={isSelected ? '#00e5ff' : node.arbitrageScore > 85 ? '#eab308' : '#374151'}
-                      stroke="#060709"
-                      strokeWidth="1.5"
-                    />
-
-                    {/* Node Label */}
-                    <text
-                      x={x + 9}
-                      y={y + 3}
-                      fill={isSelected ? '#00e5ff' : isHovered ? '#ffffff' : '#9ca3af'}
-                      fontSize="8"
-                      fontFamily="monospace"
-                      fontWeight={isSelected ? 'bold' : 'normal'}
-                    >
-                      {node.name.split(' ')[0]}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-
-            {/* Hover Tooltip in Map */}
-            {hoveredNode && (
-              <div className="absolute bottom-2 left-2 right-2 p-2.5 rounded-xl apple-glass border border-white/20 text-[10px] font-mono pointer-events-none">
-                <div className="flex justify-between text-white font-semibold mb-0.5">
-                  <span>{hoveredNode.name}</span>
-                  <span className="text-[#00e5ff]">{hoveredNode.voltageKv}kV</span>
-                </div>
-                <div className="text-gray-400">
-                  Spread Score: <span className="text-[#eab308]">{hoveredNode.arbitrageScore}/100</span> | Zero Hrs: {hoveredNode.zeroPriceHoursYear}h
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Legend */}
-          <div className="w-full pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-gray-500">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#00e5ff]" /> 500kV Trunk
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#f59e0b]" /> Congested
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#eab308]" /> Top Arbitrage
-            </span>
-          </div>
+        {/* Interactive GIS Map Container */}
+        <div className={`transition-all duration-300 ${
+          isMapExpanded ? 'lg:col-span-12 min-h-[580px]' : 'lg:col-span-5 min-h-[520px]'
+        }`}>
+          <InteractiveGisMap
+            selectedNodeId={selectedNodeId}
+            onSelectNode={onSelectNode}
+            zoneFilter={zoneFilter}
+          />
         </div>
 
-        {/* Tabular Data Grid (8 cols) */}
-        <div className="lg:col-span-8 space-y-4">
+        {/* Tabular Data Grid */}
+        <div className={`space-y-4 transition-all duration-300 ${
+          isMapExpanded ? 'lg:col-span-12' : 'lg:col-span-7'
+        }`}>
           <div className="flex items-center justify-between text-xs font-mono text-gray-400 pb-2 border-b border-white/5">
-            <span>NODAL REGISTRY ({filteredNodes.length} SUBSTATIONS)</span>
-            <span className="text-[#00e5ff]">CLICK ROW TO ARRANGE IN CHRONOS ENGINE</span>
+            <span className="flex items-center gap-1.5 text-white font-medium">
+              <MapIcon className="w-3.5 h-3.5 text-[#00e5ff]" />
+              REGISTRO DE BARRAS ({filteredNodes.length} SUBESTACIONES AUDITADAS)
+            </span>
+            <span className="text-[#00e5ff] text-[11px] hidden sm:inline">
+              HAZ CLIC EN CUALQUIER FILA PARA ENFOCAR EL MAPA Y CARGAR EN CHRONOS
+            </span>
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.01]">
             <table className="w-full text-left text-xs font-mono">
               <thead className="bg-white/[0.03] text-gray-400 border-b border-white/10 text-[10px] uppercase tracking-wider">
                 <tr>
-                  <th className="py-3 px-3">Substation Node</th>
-                  <th className="py-3 px-3">Zone</th>
-                  <th className="py-3 px-3 text-right">Avg Marginal</th>
-                  <th className="py-3 px-3 text-right">Zero-Price Hrs</th>
-                  <th className="py-3 px-3 text-right">Congestion</th>
-                  <th className="py-3 px-3 text-right">BESS Score</th>
-                  <th className="py-3 px-3 text-center">Action</th>
+                  <th className="py-3 px-3">Subestación / Barra</th>
+                  <th className="py-3 px-3">Zona</th>
+                  <th className="py-3 px-3 text-right">Costo Marg.</th>
+                  <th className="py-3 px-3 text-right">Hrs Precio Cero</th>
+                  <th className="py-3 px-3 text-right">Congestión</th>
+                  <th className="py-3 px-3 text-right">Score BESS</th>
+                  <th className="py-3 px-3 text-center">Acción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredNodes.map((node) => {
                   const isSelected = selectedNodeId === node.id;
+                  const isTopArbitrage = node.arbitrageScore >= 90;
+
                   return (
                     <tr
                       key={node.id}
                       onClick={() => onSelectNode(node)}
                       className={`cursor-pointer transition-colors ${
                         isSelected
-                          ? 'bg-[#00e5ff]/10 text-white font-medium'
+                          ? 'bg-[#00e5ff]/10 text-white font-medium border-l-2 border-[#00e5ff]'
                           : 'hover:bg-white/[0.04] text-gray-300'
                       }`}
                     >
-                      <td className="py-3.5 px-3">
-                        <div className="flex items-center gap-2">
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2.5">
                           <span
-                            className={`w-2 h-2 rounded-full ${
-                              node.voltageKv === 500 ? 'bg-[#00e5ff]' : 'bg-gray-500'
+                            className={`w-2.5 h-2.5 rounded-full ${
+                              node.voltageKv === 500
+                                ? 'bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]'
+                                : 'bg-gray-400'
                             }`}
                           />
                           <div>
-                            <div className="font-semibold text-white">{node.name}</div>
+                            <div className="font-semibold text-white flex items-center gap-1.5">
+                              <span>{node.name}</span>
+                              {isSelected && (
+                                <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#00e5ff] text-black font-bold">
+                                  ACTIVA
+                                </span>
+                              )}
+                            </div>
                             <div className="text-[10px] text-gray-400">{node.region}</div>
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-3 text-[11px] text-gray-400">
+                      <td className="py-3 px-3 text-[11px] text-gray-400">
                         {node.zone}
                       </td>
 
-                      <td className="py-3.5 px-3 text-right font-medium">
-                        ${node.avgMarginalPrice.toFixed(1)} <span className="text-[9px] text-gray-400">USD</span>
+                      <td className="py-3 px-3 text-right font-medium">
+                        ${node.avgMarginalPrice.toFixed(1)}{' '}
+                        <span className="text-[10px] text-gray-500">/MWh</span>
                       </td>
 
-                      <td className="py-3.5 px-3 text-right">
+                      <td className="py-3 px-3 text-right">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] ${
+                          className={`font-semibold ${
                             node.zeroPriceHoursYear > 1500
-                              ? 'bg-[#eab308]/15 text-[#eab308] border border-[#eab308]/30'
-                              : 'text-gray-400'
+                              ? 'text-amber-400'
+                              : 'text-gray-300'
                           }`}
                         >
-                          {node.zeroPriceHoursYear} hrs
+                          {node.zeroPriceHoursYear} h
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <span className="text-[11px]">{node.transmissionCongestionIndex}%</span>
-                          <div className="w-12 h-1.5 bg-black/40 rounded-full overflow-hidden">
+                      <td className="py-3 px-3 text-right">
+                        <div className="inline-flex items-center gap-1.5">
+                          <span
+                            className={`text-[11px] ${
+                              node.transmissionCongestionIndex > 80
+                                ? 'text-rose-400 font-semibold'
+                                : node.transmissionCongestionIndex > 60
+                                ? 'text-amber-400'
+                                : 'text-emerald-400'
+                            }`}
+                          >
+                            {node.transmissionCongestionIndex}%
+                          </span>
+                          <div className="w-12 h-1.5 rounded-full bg-white/10 overflow-hidden hidden sm:block">
                             <div
-                              style={{ width: `${node.transmissionCongestionIndex}%` }}
-                              className={`h-full ${
+                              className={`h-full rounded-full ${
                                 node.transmissionCongestionIndex > 80
-                                  ? 'bg-[#f59e0b]'
-                                  : 'bg-[#00e5ff]'
+                                  ? 'bg-rose-500'
+                                  : node.transmissionCongestionIndex > 60
+                                  ? 'bg-amber-400'
+                                  : 'bg-emerald-400'
                               }`}
+                              style={{ width: `${node.transmissionCongestionIndex}%` }}
                             />
                           </div>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-3 text-right">
+                      <td className="py-3 px-3 text-right">
                         <span
-                          className={`font-semibold text-sm ${
-                            node.arbitrageScore >= 90
-                              ? 'text-[#00e5ff]'
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                            isTopArbitrage
+                              ? 'bg-emerald-400/20 text-emerald-400 border border-emerald-400/40'
                               : node.arbitrageScore >= 75
-                              ? 'text-[#10b981]'
-                              : 'text-gray-400'
+                              ? 'bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40'
+                              : 'bg-amber-400/20 text-amber-400 border border-amber-400/40'
                           }`}
                         >
                           {node.arbitrageScore}
                         </span>
-                        <span className="text-[9px] text-gray-400">/100</span>
                       </td>
 
-                      <td className="py-3.5 px-3 text-center">
+                      <td className="py-3 px-3 text-center">
                         <button
-                          type="button"
-                          className={`px-2.5 py-1 rounded text-[10px] font-mono transition-all ${
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectNode(node);
+                          }}
+                          className={`p-1.5 rounded-lg border transition-all ${
                             isSelected
-                              ? 'bg-[#00e5ff] text-black font-semibold'
-                              : 'border border-white/10 text-gray-400 hover:text-white hover:border-white/30'
+                              ? 'bg-[#00e5ff] text-black border-[#00e5ff]'
+                              : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
                           }`}
+                          title="Cargar esta subestación en el simulador BESS Chronos"
                         >
-                          {isSelected ? 'LOADED' : 'SELECT'}
+                          <ArrowUpRight className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>
@@ -323,32 +249,37 @@ export const NodalHeatmap: React.FC<NodalHeatmapProps> = ({
             </table>
           </div>
 
-          {/* Substation Highlight Card */}
-          {filteredNodes.find((n) => n.id === selectedNodeId) && (
-            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <span className="text-[10px] font-mono text-[#00e5ff] uppercase tracking-wider">
-                  ACTIVE NODAL INTERCONNECTION
-                </span>
-                <div className="text-sm font-semibold text-white">
-                  {CHILEAN_NODES.find((n) => n.id === selectedNodeId)?.name} — {CHILEAN_NODES.find((n) => n.id === selectedNodeId)?.region}
-                </div>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {CHILEAN_NODES.find((n) => n.id === selectedNodeId)?.description}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 font-mono text-xs text-right shrink-0">
-                <div>
-                  <div className="text-[10px] text-gray-400">ANNUAL CURTAILMENT</div>
-                  <div className="text-white font-semibold">
-                    {CHILEAN_NODES.find((n) => n.id === selectedNodeId)?.solarCurtailmentGwh} GWh
+          {/* Selected Node Mini Dossier */}
+          {(() => {
+            const currentSelected = CHILEAN_NODES.find((n) => n.id === selectedNodeId);
+            if (!currentSelected) return null;
+
+            return (
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff]">
+                    <Zap className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-white font-semibold">
+                      {currentSelected.name} // {currentSelected.voltageKv} kV
+                    </div>
+                    <div className="text-[11px] text-gray-400">
+                      {currentSelected.description}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-        </div>
 
+                <div className="text-right whitespace-nowrap">
+                  <span className="text-[10px] text-gray-500 block">Vertimiento Solar Est.:</span>
+                  <span className="text-sm font-semibold text-amber-400">
+                    {currentSelected.solarCurtailmentGwh.toFixed(1)} GWh/año
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
       </div>
     </section>
   );
