@@ -758,16 +758,16 @@
     /* ==============================================================
        2. PROCEDURAL WEB AUDIO SYNTHESIZER
        ============================================================== */
-    class ProceduralAudioEngine {
+    class CinematicAudioEngine {
       constructor() {
         this.ctx = null;
         this.isMuted = false;
         this.masterGain = null;
-        this.droneOsc1 = null;
-        this.droneOsc2 = null;
-        this.droneGain = null;
-        this.chargeOsc = null;
-        this.chargeGain = null;
+        this.chargeAudio = null;
+        this.explosionAudio = null;
+        this.explosionPunchAudio = null;
+        this.thumpAudio = null;
+        this.fireballAudio = null;
         this.initialized = false;
       }
 
@@ -775,11 +775,34 @@
         if (this.initialized) return;
         try {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContext) return;
-          this.ctx = new AudioContext();
-          this.masterGain = this.ctx.createGain();
-          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.4, this.ctx.currentTime);
-          this.masterGain.connect(this.ctx.destination);
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.85, this.ctx.currentTime);
+            this.masterGain.connect(this.ctx.destination);
+          }
+
+          // Preload Studio Sound Assets
+          this.chargeAudio = new Audio('./audio/machine_charge.mp3');
+          this.chargeAudio.preload = 'auto';
+          this.chargeAudio.volume = this.isMuted ? 0 : 0.7;
+
+          this.explosionAudio = new Audio('./audio/explosion_reverb.mp3');
+          this.explosionAudio.preload = 'auto';
+          this.explosionAudio.volume = this.isMuted ? 0 : 1.0;
+
+          this.explosionPunchAudio = new Audio('./audio/explosion.mp3');
+          this.explosionPunchAudio.preload = 'auto';
+          this.explosionPunchAudio.volume = this.isMuted ? 0 : 0.85;
+
+          this.thumpAudio = new Audio('./audio/thump.mp3');
+          this.thumpAudio.preload = 'auto';
+          this.thumpAudio.volume = this.isMuted ? 0 : 0.45;
+
+          this.fireballAudio = new Audio('./audio/fireball.mp3');
+          this.fireballAudio.preload = 'auto';
+          this.fireballAudio.volume = this.isMuted ? 0 : 0.6;
+
           this.initialized = true;
         } catch (e) {
           console.warn("AudioContext init postponed until gesture", e);
@@ -795,187 +818,213 @@
       toggleMute() {
         this.isMuted = !this.isMuted;
         if (this.masterGain && this.ctx) {
-          this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
-          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.4, this.ctx.currentTime);
+          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.85, this.ctx.currentTime);
         }
+        const volMult = this.isMuted ? 0 : 1;
+        if (this.chargeAudio) this.chargeAudio.volume = 0.7 * volMult;
+        if (this.explosionAudio) this.explosionAudio.volume = 1.0 * volMult;
+        if (this.explosionPunchAudio) this.explosionPunchAudio.volume = 0.85 * volMult;
+        if (this.thumpAudio) this.thumpAudio.volume = 0.45 * volMult;
+        if (this.fireballAudio) this.fireballAudio.volume = 0.6 * volMult;
         return this.isMuted;
       }
 
       playMechanicalTick(pitch = 1400) {
-        if (!this.initialized || this.isMuted) return;
+        if (this.isMuted) return;
         this.resume();
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        const filter = this.ctx.createBiquadFilter();
 
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(pitch, now);
-        osc.frequency.exponentialRampToValueAtTime(100, now + 0.035);
+        // Studio mechanical sub thump
+        if (this.thumpAudio) {
+          const thumpClone = this.thumpAudio.cloneNode();
+          thumpClone.volume = this.isMuted ? 0 : 0.35;
+          thumpClone.playbackRate = 1.1 + (Math.random() - 0.5) * 0.4;
+          thumpClone.play().catch(() => {});
+        }
 
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(2600, now);
-        filter.Q.value = 5;
+        // High frequency precision click
+        if (this.ctx && this.masterGain) {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
 
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(pitch, now);
+          osc.frequency.exponentialRampToValueAtTime(110, now + 0.04);
 
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.masterGain);
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(3000, now);
+          filter.Q.value = 6;
 
-        osc.start(now);
-        osc.stop(now + 0.04);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.masterGain);
+
+          osc.start(now);
+          osc.stop(now + 0.045);
+        }
       }
 
       playArcPulse() {
-        if (!this.initialized || this.isMuted) return;
+        if (this.isMuted) return;
         this.resume();
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
 
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(350 + Math.random() * 600, now);
-        osc.frequency.linearRampToValueAtTime(90, now + 0.06);
+        if (this.fireballAudio && Math.random() > 0.5) {
+          const fireClone = this.fireballAudio.cloneNode();
+          fireClone.volume = this.isMuted ? 0 : 0.25;
+          fireClone.currentTime = 0.2;
+          fireClone.play().catch(() => {});
+          setTimeout(() => {
+            try { fireClone.pause(); } catch (e) {}
+          }, 350);
+        }
 
-        gain.gain.setValueAtTime(0.09, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        if (this.ctx && this.masterGain) {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
 
-        osc.connect(gain);
-        gain.connect(this.masterGain);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320 + Math.random() * 500, now);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.08);
 
-        osc.start(now);
-        osc.stop(now + 0.06);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.masterGain);
+
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
       }
 
       startReactorDrone() {
-        if (!this.initialized) return;
+        if (this.isMuted) return;
         this.resume();
-        const now = this.ctx.currentTime;
-        this.stopReactorDrone();
 
-        this.droneGain = this.ctx.createGain();
-        this.droneGain.gain.setValueAtTime(0.0001, now);
-        this.droneGain.gain.linearRampToValueAtTime(0.18, now + 1.2);
-
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(140, now);
-        filter.frequency.linearRampToValueAtTime(420, now + 3.2);
-
-        this.droneOsc1 = this.ctx.createOscillator();
-        this.droneOsc1.type = 'sawtooth';
-        this.droneOsc1.frequency.setValueAtTime(55, now); // A1 note
-
-        this.droneOsc2 = this.ctx.createOscillator();
-        this.droneOsc2.type = 'sine';
-        this.droneOsc2.frequency.setValueAtTime(110.5, now);
-
-        this.droneOsc1.connect(filter);
-        this.droneOsc2.connect(filter);
-        filter.connect(this.droneGain);
-        this.droneGain.connect(this.masterGain);
-
-        this.droneOsc1.start(now);
-        this.droneOsc2.start(now);
+        if (this.chargeAudio) {
+          this.chargeAudio.currentTime = 0;
+          this.chargeAudio.volume = this.isMuted ? 0 : 0.45;
+          this.chargeAudio.play().catch(() => {});
+        }
       }
 
       stopReactorDrone() {
-        if (this.droneOsc1) {
-          try { this.droneOsc1.stop(); this.droneOsc1.disconnect(); } catch (e) {}
-          this.droneOsc1 = null;
-        }
-        if (this.droneOsc2) {
-          try { this.droneOsc2.stop(); this.droneOsc2.disconnect(); } catch (e) {}
-          this.droneOsc2 = null;
+        if (this.chargeAudio) {
+          try {
+            const fadeInterval = setInterval(() => {
+              if (!this.chargeAudio || this.chargeAudio.volume <= 0.05) {
+                clearInterval(fadeInterval);
+                if (this.chargeAudio) {
+                  this.chargeAudio.pause();
+                  this.chargeAudio.currentTime = 0;
+                }
+              } else {
+                this.chargeAudio.volume = Math.max(0, this.chargeAudio.volume - 0.1);
+              }
+            }, 50);
+          } catch (e) {}
         }
       }
 
       startChargeWhine(duration = 1.3) {
-        if (!this.initialized || this.isMuted) return;
+        if (this.isMuted) return;
         this.resume();
-        const now = this.ctx.currentTime;
 
-        this.chargeOsc = this.ctx.createOscillator();
-        this.chargeGain = this.ctx.createGain();
+        if (this.chargeAudio) {
+          this.chargeAudio.volume = this.isMuted ? 0 : 0.85;
+        }
 
-        this.chargeOsc.type = 'sine';
-        this.chargeOsc.frequency.setValueAtTime(180, now);
-        this.chargeOsc.frequency.exponentialRampToValueAtTime(3200, now + duration);
+        if (this.fireballAudio) {
+          this.fireballAudio.currentTime = 0.1;
+          this.fireballAudio.volume = this.isMuted ? 0 : 0.55;
+          this.fireballAudio.play().catch(() => {});
+        }
 
-        this.chargeGain.gain.setValueAtTime(0.02, now);
-        this.chargeGain.gain.linearRampToValueAtTime(0.32, now + duration * 0.85);
-        this.chargeGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        // Layered cinematic riser in Web Audio
+        if (this.ctx && this.masterGain) {
+          const now = this.ctx.currentTime;
+          const chargeOsc = this.ctx.createOscillator();
+          const chargeGain = this.ctx.createGain();
 
-        this.chargeOsc.connect(this.chargeGain);
-        this.chargeGain.connect(this.masterGain);
+          chargeOsc.type = 'sawtooth';
+          chargeOsc.frequency.setValueAtTime(140, now);
+          chargeOsc.frequency.exponentialRampToValueAtTime(2400, now + duration);
 
-        this.chargeOsc.start(now);
-        this.chargeOsc.stop(now + duration);
+          chargeGain.gain.setValueAtTime(0.01, now);
+          chargeGain.gain.linearRampToValueAtTime(0.2, now + duration * 0.85);
+          chargeGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(600, now);
+          filter.frequency.linearRampToValueAtTime(3800, now + duration);
+
+          chargeOsc.connect(filter);
+          filter.connect(chargeGain);
+          chargeGain.connect(this.masterGain);
+
+          chargeOsc.start(now);
+          chargeOsc.stop(now + duration);
+        }
       }
 
       playShockwaveExplosion() {
-        if (!this.initialized || this.isMuted) return;
+        if (this.isMuted) return;
         this.resume();
-        const now = this.ctx.currentTime;
         this.stopReactorDrone();
 
-        // 1. Sub-bass boom
-        const subOsc = this.ctx.createOscillator();
-        const subGain = this.ctx.createGain();
-        subOsc.type = 'sine';
-        subOsc.frequency.setValueAtTime(130, now);
-        subOsc.frequency.exponentialRampToValueAtTime(22, now + 1.8);
-
-        subGain.gain.setValueAtTime(0.9, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
-
-        subOsc.connect(subGain);
-        subGain.connect(this.masterGain);
-        subOsc.start(now);
-        subOsc.stop(now + 2.0);
-
-        // 2. Resonant noise burst
-        const bufferSize = this.ctx.sampleRate * 2;
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.4));
+        // 1. Real Cinema Reverb Explosion
+        if (this.explosionAudio) {
+          this.explosionAudio.currentTime = 0;
+          this.explosionAudio.volume = this.isMuted ? 0 : 1.0;
+          this.explosionAudio.play().catch(() => {});
         }
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
 
-        const noiseFilter = this.ctx.createBiquadFilter();
-        noiseFilter.type = 'lowpass';
-        noiseFilter.frequency.setValueAtTime(1400, now);
-        noiseFilter.frequency.exponentialRampToValueAtTime(50, now + 1.3);
+        // 2. Layer Instant Punch Attack
+        if (this.explosionPunchAudio) {
+          this.explosionPunchAudio.currentTime = 0;
+          this.explosionPunchAudio.volume = this.isMuted ? 0 : 0.85;
+          this.explosionPunchAudio.play().catch(() => {});
+        }
 
-        const noiseGain = this.ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.7, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+        // 3. Cinema Sub-Bass Pressure Pulse (Web Audio 20-50 Hz)
+        if (this.ctx && this.masterGain) {
+          const now = this.ctx.currentTime;
+          const subOsc = this.ctx.createOscillator();
+          const subGain = this.ctx.createGain();
 
-        noise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(this.masterGain);
-        noise.start(now);
+          subOsc.type = 'sine';
+          subOsc.frequency.setValueAtTime(95, now);
+          subOsc.frequency.exponentialRampToValueAtTime(18, now + 2.2);
 
-        // 3. Shimmer tone
-        const chime = this.ctx.createOscillator();
-        const chimeGain = this.ctx.createGain();
-        chime.type = 'triangle';
-        chime.frequency.setValueAtTime(1760, now + 0.08);
-        chime.frequency.exponentialRampToValueAtTime(880, now + 1.6);
+          subGain.gain.setValueAtTime(1.0, now);
+          subGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
 
-        chimeGain.gain.setValueAtTime(0.001, now);
-        chimeGain.gain.setValueAtTime(0.18, now + 0.08);
-        chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
-
-        chime.connect(chimeGain);
-        chimeGain.connect(this.masterGain);
-        chime.start(now + 0.08);
-        chime.stop(now + 2.0);
+          subOsc.connect(subGain);
+          subGain.connect(this.masterGain);
+          subOsc.start(now);
+          subOsc.stop(now + 2.4);
+        }
       }
+
+      destroy() {
+        this.stopReactorDrone();
+        if (this.chargeAudio) { try { this.chargeAudio.pause(); } catch (e) {} }
+        if (this.explosionAudio) { try { this.explosionAudio.pause(); } catch (e) {} }
+        if (this.explosionPunchAudio) { try { this.explosionPunchAudio.pause(); } catch (e) {} }
+        if (this.thumpAudio) { try { this.thumpAudio.pause(); } catch (e) {} }
+        if (this.fireballAudio) { try { this.fireballAudio.pause(); } catch (e) {} }
+        if (this.ctx) {
+          try { this.ctx.close(); } catch (e) {}
+          this.ctx = null;
+        }
+      }
+    }
     }
 
     /* ==============================================================
@@ -994,7 +1043,7 @@
     const textAudioStatus = document.getElementById('text-audio-status');
     const btnReplayNav = document.getElementById('btn-replay-nav');
 
-    const audio = new ProceduralAudioEngine();
+    const audio = new CinematicAudioEngine();
 
     let width = 0;
     let height = 0;
